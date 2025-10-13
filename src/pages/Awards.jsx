@@ -1,49 +1,77 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Award } from 'lucide-react';
 import AwardCard from '../components/AwardCard';
+import Modal from '../components/Modal';
+import properUnit78 from '../assets/images/Sertifikat PROPER Unit 78 2015-2016.jpg'
+import iga2024 from '../assets/images/IGA 2024.jpg'
+import csrstar5 from '../assets/images/csr star 5.png'
+import star4 from '../assets/images/CSR 4 star.png'
+import stellar2022 from '../assets/images/piala hitam.png'
+import greenproper from '../assets/images/green proper tropy.png' 
+import smk3 from '../assets/images/SMK3.png'
+import iso14001 from '../assets/images/14001.png'
+import iso45001 from '../assets/images/45001.png'
+import k3 from '../assets/images/K3.png'
+import iso27001 from '../assets/images/27001.png'
+import iso50001 from '../assets/images/50001.png'
+import smp from '../assets/images/SMP.png'
+import kesehatan from '../assets/images/bpjs kesehatan.jpg'
+import siddhakarya from '../assets/images/siddhakarya.png'
+import proper from '../assets/images/proper.png'
+// new import
 
 export default function Awards() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAward, setSelectedAward] = useState(null);
+
+  function handleCardHover(a) {
+    // Only open modal on hover/keyboard focus. Do not auto-close on leave.
+    if (a) {
+      setSelectedAward(a);
+      setModalOpen(true);
+    }
+  }
 
   const awards = [
     {
       id: 1,
       title: "ISO 14001:2015",
-      category: "Sistem Manajemen Lingkungan",
-      year: "2015",
-      image: "https://belajark3.com/iso-14001/images/iso-14001.webp",
-      description: "Sertifikasi Sistem Manajemen Lingkungan"
+      category: "Sertifikat Registrasi Sistem Manajemen Lingkungan",
+      year: "2024",
+      image: iso14001,
+      description: "Sertifikat ini dikeluarkan oleh lembaga sertifikasi internasional Intertek SAI Global. Sertifikat ini menyatakan bahwa PT. Paiton Operation and Maintenance Indonesia (POMI) telah menerapkan dan menjalankan Sistem Manajemen Lingkungan yang memenuhi standar internasional ISO 14001:2015. Lingkup sertifikasi ini mencakup kegiatan operasi dan pemeliharaan Pembangkit Listrik Tenaga Uap (PLTU) Paiton Unit 3, 7 & 8. Perusahaan ini pertama kali mendapatkan sertifikasi ini pada 19 November 2003, yang menunjukkan komitmen jangka panjang terhadap pengelolaan lingkungan."
     },
     {
       id: 2,
-      title: "ISO 45001",
-      category: "Sistem Manajemen Kesehatan dan Keselamatan Kerja",
-      year: "2018",
-      image: "https://qdt.com.au/wp-content/uploads/2019/05/ISO-45001-logo.png",
-      description: "Sertifikasi Sistem Manajemen Kesehatan dan Keselamatan Kerja"
+      title: "Sistem Manajemen Kesehatan & Keselamatan Kerja (ISO 45001:2018)",
+      category: "Sistem Manajemen Kesehatan & Keselamatan Kerja (Occupational Health & Safety Management System",
+      year: "2024",
+      image: iso45001,
+      description: " Sertifikat ini dikeluarkan oleh lembaga sertifikasi internasional Intertek SAI Global. Sertifikat ini menjadi bukti bahwa PT. Paiton Operation and Maintenance Indonesia (POMI) telah menerapkan Sistem Manajemen Kesehatan & Keselamatan Kerja yang sesuai dengan standar internasional ISO 45001:2018. Lingkup sertifikasi ini mencakup kegiatan operasi dan pemeliharaan Pembangkit Listrik Tenaga Uap (PLTU) Paiton Unit 3, 7 & 8. Perusahaan ini pertama kali mendapatkan sertifikasi di bidang ini pada 23 Januari 2019"
     },
     {
       id: 3,
-      title: "ISO/IEC 27001:2022 – Information Security Management System",
-      category: "Keamanan Informasi",
+      title: "Sistem Manajemen Keamanan Informasi (ISO/IEC 27001:2022)",
+      category: " Sistem Manajemen Keamanan Informasi (Information Security Management System - ISMS)",
       year: "2024",
-      image: "https://static.wixstatic.com/media/9138d2_05c1b6701b7b4277a30a1bfc8b2ce527~mv2.jpg/v1/fill/w_1000,h_750,al_c,q_85,usm_0.66_1.00_0.01/9138d2_05c1b6701b7b4277a30a1bfc8b2ce527~mv2.jpg",
-      description: "PT Paiton Operation and Maintenance Indonesia (POMI) memperoleh sertifikasi ISO/IEC 27001:2022 atas penerapan sistem manajemen keamanan informasi (ISMS) dalam pengelolaan infrastruktur pusat data, sebagai bukti komitmen terhadap perlindungan dan pengelolaan data sesuai standar internasional."
+      image: iso27001,
+      description: "Sertifikat ini dikeluarkan oleh lembaga sertifikasi ternama BSI (British Standards Institution). Sertifikat ini menyatakan bahwa PT Paiton Operation & Maintenance Indonesia telah menerapkan Sistem Manajemen Keamanan Informasi yang memenuhi standar internasional ISO/IEC 27001:2022. Lingkup sertifikasi ini secara spesifik mencakup pengelolaan keamanan informasi dalam penyediaan infrastruktur Pusat Data (Data Centre). Pencapaian ini menunjukkan komitmen perusahaan dalam melindungi aset informasi dan data penting sesuai dengan praktik terbaik global."
     },
     {
       id: 4,
-      title: "ISO 50001:2018 – Energy Management System",
-      category: "Manajemen Energi",
+      title: "Sistem Manajemen Energi (ISO 50001:2018)",
+      category: "Sistem Manajemen Energi (Energy Management System - EnMS)",
       year: "2024",
-      image: "https://media.licdn.com/dms/image/v2/D5622AQFyDdujHNc4kg/feedshare-shrink_2048_1536/B56ZPxSuU3G8As-/0/1734920038584?e=1762992000&v=beta&t=zZr-YIe5yeaa-ON4GbZkGXwEk-HWfxeB0ZARJnSosSQ",
-      description: "PT Paiton Operation and Maintenance Indonesia (POMI) meraih sertifikasi ISO 50001:2018 atas penerapan sistem manajemen energi yang bertujuan meningkatkan efisiensi energi, mengurangi emisi gas rumah kaca, serta menekan dampak lingkungan dan biaya energi."
+      image: iso50001,
+      description: "Sertifikat ini dikeluarkan oleh lembaga sertifikasi BSI (British Standards Institution). Sertifikat ini menjadi bukti bahwa PT Paiton Operation & Maintenance Indonesia (POMI) telah menerapkan dan menjalankan Sistem Manajemen Energi yang memenuhi standar internasional ISO 50001:2018. Lingkup sertifikasi ini mencakup kegiatan Operasi dan Pemeliharaan Pembangkit Listrik dari Pembangkit Listrik Tenaga Uap (PLTU). Pencapaian ini menunjukkan komitmen perusahaan untuk meningkatkan efisiensi energi, mengurangi konsumsi, dan mengoptimalkan penggunaan energi secara berkelanjutan."
     },
     {
       id: 5,
       title: "ISO 55001:2014",
       category: "Sistem Manajemen Aset",
       year: "2014",
-      image: "https://5.imimg.com/data5/SELLER/Default/2023/9/345879833/ID/JX/JQ/142010693/iso-55001-2014-certification-services-500x500.png",
+      image: "https://media.licdn.com/dms/image/v2/D4E12AQErTpwV6CdXLg/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1696633488036?e=2147483647&v=beta&t=oBYv0woSfvzKi45wBQV9vUEEmX0r46AgBmpCAA-v7dA",
       description: "Sertifikasi Sistem Manajemen Aset"
     },
     {
@@ -51,7 +79,7 @@ export default function Awards() {
       title: "Authorized Economic Operator (AEO)",
       category: "Occupational Health & Safety",
       year: "",
-      image: "https://www.lnjlogistics.com/wp-content/uploads/2023/09/lnj-logistics-certification-aeo.png",
+      image: "https://www.sumitomocorp.com/asia-oceania/-/media/Images/ao/ssri/keyindustrialarea/AEO_smoll.jpg?h=250&iar=0&w=500",
       description: "Otorisasi Operator Ekonomi Terpercaya dari Direktorat Jenderal Bea dan Cukai"
     },
     {
@@ -59,123 +87,84 @@ export default function Awards() {
       title: "SMK2",
       category: "Sistem Manajemen Keselamatan dan Ketenagalistrikan",
       year: "2024",
-      image: "https://dantaramandiri.co.id/wp-content/uploads/2025/05/logo-tanpa-tulisan.webp",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6RF_IK2xU5dGib9lY6AUoqKVlyNfHMW9d1A0bEyAMVBadfbsx7wO25xirN0YbRLpSC8I&usqp=CAU",
       description: "Penghargaan dari Direktorat Jenderal Ketenagalistrikan (DJK) ESDM"
     },
     {
       id: 8,
-      title: "SMK3",
-      category: "Sistem Manajemen Kesehatan dan Keselamatan Kerja",
+      title: "Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3)",
+      category: "Penerapan Sistem Manajemen K3 - Kategori Tingkat Lanjutan.",
       year: "2024",
-      image: "https://kualitasprimasertifikasi.com/wp-content/uploads/2019/08/smk3.jpg",
-      description: "Penghargaan dari Kementerian Ketenagakerjaan (Kemnaker) Indonesia"
+      image: smk3,
+      description: " Sertifikat ini merupakan penghargaan terbaru yang dianugerahkan oleh Menteri Ketenagakerjaan Republik Indonesia kepada PT. Paiton Operation & Maintenance Indonesia. Penghargaan ini diberikan sebagai pengakuan atas keberhasilan perusahaan dalam menerapkan kembali Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3). Perusahaan berhasil meraih hasil audit 92,16%, yang kembali menempatkannya dalam kategori tingkat Lanjutan berdasarkan 166 kriteria penilaian. Ini merupakan pembaruan dari sertifikat serupa yang diterima pada tahun 2020."
     },
     {
       id: 9,
-      title: "Proper Kategori Hijau",
+      title: "Penghargaan Program Penilaian Peringkat Kinerja Perusahaan (PROPER) dalam Pengelolaan Lingkungan Hidup",
       category: "Pengelolaan Lingkungan",
       year: "2015-2016",
-      image: "https://anntamandiri-sejahtera.co.id/storage/2024/01/7-3.jpg",
-      description: "Penghargaan dari Kementerian Lingkungan Hidup dan Kehutanan"
+      image: properUnit78,
+      description: "Sertifikat ini dianugerahkan oleh Kementerian Lingkungan Hidup dan Kehutanan kepada PT. Paiton Energy Company sebagai pengakuan atas pencapaian peringkat \"Hijau\" dalam program PROPER periode 2015-2016, yang menilai kinerja perusahaan dalam pengelolaan lingkungan hidup."
     },
     {
       id: 10,
-      title: "Sistem Manajemen Pengamanan Predikat Emas",
-      category: "Pengelolaan Keamanan",
+      title: "Tanda Penghargaan Penerapan Keselamatan dan Kesehatan Kerja (K3) Perkantoran.",
+      category: " Penerapan K3 Perkantoran (Kategori Kantor Kementerian/ BUMN/ Swasta)",
       year: "2023",
-      image: "https://png.pngtree.com/png-clipart/20231101/original/pngtree-brushed-gold-shield-security-system-photo-png-image_13472178.png",
-      description: " Kepolisian Negara Republik Indonesia (Polri)"
+      image: k3,
+      description: "Penghargaan ini dianugerahkan oleh Menteri Kesehatan Republik Indonesia kepada PT. Paiton Operation And Maintenance Indonesia. Penghargaan ini diberikan sebagai pengakuan atas keberhasilan perusahaan dalam menerapkan standar Keselamatan dan Kesehatan Kerja (K3) secara spesifik di lingkungan perkantoran. Ini menunjukkan komitmen perusahaan terhadap kesehatan dan keselamatan tidak hanya di area operasional pabrik, tetapi juga di area fasilitas kantor."
     },
     {
       id: 11,
-      title: "Invesment Award Juara Harapan 1",
-      category: "Penghargaan Investasi",
-      year: "2022",
-      image: "https://cdn3d.iconscout.com/3d/premium/thumb/award-3d-icon-png-download-10753108.png",
-      description: "Penghargaan dari Badan Koordinasi Penanaman Modal (BKPM)"
+      title: "TOP CSR Awards 2023",
+      category: "CSR Innovation Programs for Sustainable Business Growth",
+      year: "2023",
+      image: csrstar5,
+      description: "TOP CSR Awards 2023 merupakan ajang penghargaan yang diselenggarakan oleh Majalah Top Business guna memberikan apresiasi dan penghargaan tertinggi kepada PT. POMI (Paiton Operation & Maintenance Indonesia) yang dinilai berhasil dalam menjalankan program CSR dengan pendekatan penciptaan nilai manfaat bersama berhasil."
     },
     {
       id: 12,
-      title: "Program Pencegahan dan Penanggulangan Corona Virus Disease (COVID-19) di Tempat Kerja",
-      category: "Platinum",
-      year: "2021",
-      image: "https://img.freepik.com/premium-vector/stop-coronavirus-icon-caution-vector-sign-with-covid19_182787-1021.jpg",
-      description: "Penghargaan dari Kementerian Kesehatan RI"
+      title: "Stellar Workplace Award DX® 2022",
+      category: "Stellar Workplace Recognition in Employee Commitment & Satisfaction",
+      year: "2022",
+      image: stellar2022,
+      description: "Piala penghargaan yang diberikan kepada PT Paiton Energy sebagai pengakuan atas komitmen dan kepuasan karyawan dalam ajang Stellar Workplace Award DX® 2022."
     },
      {
       id: 13,
-      title: "Indonesia Green Award – Plastic Waste Management Category",
-      category: "Pengelolaan Limbah Plastik / Inovasi Lingkungan",
+      title: "Sertifikat Penghargaan Nasional Lingkungan Hidup - Indonesia Green Awards (IGA) 2024",
+      category: " Penanganan Sampah Plastik, Program: Sosialisasi Popok to The Post from Waste to Best, Nilai: 8,5",
       year: "2024",
-      image: "https://media.licdn.com/dms/image/v2/D5622AQGDJKG8ih4HWA/feedshare-shrink_800/feedshare-shrink_800/0/1708051508190?e=1762992000&v=beta&t=ZhFx8lLVXcCiMWMCfibMGZQxjppUD56l-xO0M8OJqzs",
-      description: "PT Paiton Energy–POMI meraih Indonesia Green Award 2024 kategori Plastic Waste Management atas program inovatif “Popok to the Pot: From Waste to Best”, yang mengolah limbah popok sekali pakai menjadi pot tanaman sebagai bagian dari komitmen perusahaan terhadap pengelolaan limbah dan pemberdayaan masyarakat."
+  image: iga2024,
+      description: " Sertifikat ini diberikan kepada PT Paiton Energy sebagai \"The Promising\" karena telah meraih penghargaan dalam kategori penanganan sampah plastik melalui program sosialisasi \"Popok to The Post from Waste to Best\" pada ajang Indonesia Green Awards 2024."
     },
      {
       id: 14,
-      title: "Indonesia Climate Change Expo & Forum",
-      category: "Partisipan",
-      year: "2023",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ60A8d1eKzoougG6VCWKZH-FqjvNKtIj5nJA&s",
-      description: "Indonesia Climate Change Expo & Forum 2023",
+      title: " Peringkat Hijau Program Penilaian Peringkat Kinerja Perusahaan (PROPER) 2017-2018",
+      category: "Pengelolaan Lingkungan Hidup",
+      year: "2018",
+      image: greenproper,
+      description: "Piala ini menandakan pencapaian Peringkat Hijau dalam Program Penilaian Peringkat Kinerja Perusahaan (PROPER) periode 2017-2018 yang diberikan oleh Kementerian Lingkungan Hidup dan Kehutanan.",
     },
   {
       id: 15,
-      title: "Sistem Manajemen Keselamatan dan Kesehatan Kerja",
-      category: "Predikat Emas",
+      title: "Sistem Manajemen Pengamanan (SMP)",
+      category: "Sistem Manajemen Pengamanan Swakarsa dengan predikat Gold Reward",
       year: "2023", 
-      image: "https://kualitasprimasertifikasi.com/wp-content/uploads/2019/08/smk3.jpg",
-      description: "Penghargaan dari Kementerian Ketenagakerjaan (Kemnaker) Indonesia"
+      image: smp,
+      description: "Sertifikat ini dianugerahkan oleh Kepala Kepolisian Negara Republik Indonesia (Kapolri) kepada PT Paiton Operation & Maintenance Indonesia. Penghargaan ini diberikan sebagai pengakuan atas keberhasilan perusahaan dalam menerapkan Sistem Manajemen Pengamanan Swakarsa sesuai dengan Peraturan Kepolisian Nomor 7 Tahun 2019. Pencapaian predikat Gold Reward merupakan level penghargaan tertinggi dalam audit ini, yang menandakan keunggulan perusahaan dalam mengelola sistem keamanan secara mandiri di lingkungannya."
     },
-  {
-      id: 16,
-      title: "Keselamatan dan Kesehatan Kerja(K3) Perkantoran",
-      category: "Kantor Kementerian/BUMN/Swasta dengan Nilai Terbaik",
-      year: "2023",
-      image: "https://mahirajayabana.com/wp-content/uploads/2022/11/bendera-k3-png.png",
-      description: "Penghargaan dari Kementerian Ketenagakerjaan (Kemnaker) Indonesia"
-    },
+
    {
-      id: 17,
-      title: "Indonesia Green Awards",
+      id: 16,
+      title: "TOP CSR Awards 2022",
       category: "Best CSR Program",
       year: "2022",
-      image: "https://indonesiagreenawards.com/wp-content/uploads/2022/02/94-LogoIGA2022.jpg",
-      description: "Penghargaan dari The La Tofi School of Social Responsibility"
-    },
-  {
-      id: 18,
-      title: "Top CSR Awards",
-      category: "Bintang 5",
-      year: "2023",
-      image: "https://i.ytimg.com/vi/fdVZwGgvfZc/mqdefault.jpg",
-      description: "Penghargaan dari Majalah Top Business"
-    },
-  {
-      id: 19,
-      title: "Top CSR Awards",
-      category: "Top Leader on the 2023",
-      year: "2023",
-      image: "https://i.ytimg.com/vi/fdVZwGgvfZc/mqdefault.jpg",
-      description: "Penghargaan dari Majalah Top Business"
-    },
-  {
-      id: 20,
-      title: "Stellar Award",
-      category: "Workplace Recognition in Employee Commitment and Satisfaction",
-      year: "2022",
-      image: "https://cdn-p.smehost.net/sites/90b58e35a8714a8bbe2e845a0b7bffd2/wp-content/uploads/2022/07/284591503_5455300094532198_6205228550043948263_n.jpeg",
-      description: "Penghargaan dari ONE GML"
+      image: star4,
+      description: "Piala ini adalah penghargaan TOP CSR Awards 2022 dengan peringkat Bintang 4 yang diberikan kepada PT Paiton Energy - PT POMI."
     },
     {
-      id: 21,
-      title: "Top CSR 2022",
-      category: "Dengan Predikat Bintang 4",
-      year: "2022",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5s9wkvXoGLEnYNZG8oeMUFUDP_-C-YtTfHA&s",
-      description: "Penghargaan dari Majalah Top Business"
-    },
-    {
-      id: 22,
+      id: 17,
       title: "CSR Indonesia Award",
       category: "Karsa Budaya Prima Gold",
       year: "2022",
@@ -183,7 +172,7 @@ export default function Awards() {
       description: "Penghargaan dari Meprindo Communication dan Media CSR Indonesia Magazine"
     },
     {
-      id: 23,
+      id: 18,
       title: "Zero Accident Award",
       category: "Keselamatan dan Kesehatan Kerja (K3) / Pencegahan Kecelakaan Kerja",
       year: "2022",
@@ -191,7 +180,7 @@ export default function Awards() {
       description: "Diberikan oleh Gubernur Jawa Timur kepada PT Paiton Operation & Maintenance Indonesia atas keberhasilannya menerapkan standar K3 secara efektif. Perusahaan berhasil mempertahankan zero accident (tanpa kecelakaan kerja) dan tanpa Penyakit Akibat Kerja (PAK) selama tiga tahun berturut-turut, serta memperoleh sertifikat SMK3 tingkat Emas. Penghargaan ini menjadi bukti komitmen perusahaan dalam menjaga lingkungan kerja yang aman dan sehat."
     },
         {
-      id: 24,
+      id: 19,
       title: "HIV/AIDS Prevention and Control Program Award",
       category: "Program Pencegahan dan Pengendalian HIV/AIDS di Tempat Kerja",
       year: "2025",
@@ -199,15 +188,15 @@ export default function Awards() {
       description: "Pada 14 Februari 2025, Gubernur Jawa Timur memberikan penghargaan kepada PT Paiton Operation and Maintenance Indonesia – PT Paiton Energy atas keberhasilannya dalam menerapkan Program Pencegahan dan Pengendalian HIV/AIDS di Tempat Kerja. Penghargaan ini diberikan di Kantor Disnaker Korwil Probolinggo."
     },
        {
-      id: 25,
+      id: 20,
       title: "PROPER (Corporate Performance Rating Program) – Green Rating",
       category: "Lingkungan dan Tanggung Jawab Sosial (Environmental and Social Management)",
       year: "2024",
-      image: "https://media.licdn.com/dms/image/v2/D5622AQEU7esab1nuMA/feedshare-shrink_1280/B56ZVfAaEJHQAk-/0/1741055699162?e=1762992000&v=beta&t=iq0_mBWVt6g0RS27gfeF40uqU0STKUCNV82bIS1zS6Y",
+      image: proper,
       description: "PT Paiton Energy – PT Paiton Operation and Maintenance Indonesia (POMI) meraih peringkat Hijau (Green Rating) dalam Program Penilaian Peringkat Kinerja Perusahaan (PROPER) dari Kementerian Lingkungan Hidup Republik Indonesia. Penghargaan ini diserahkan pada Upacara Penghargaan PROPER di Sasono Langen Budoyo, Taman Mini Indonesia Indah, Jakarta, pada 24 Februari 2025."
     },
       {
-      id: 26,
+      id: 21,
       title: "EBTKE Award – Energy Efficiency in Energy Efficient Buildings Category",
       category: "Efisiensi Energi / Bangunan Hemat Energi",
       year: "2024",
@@ -215,15 +204,15 @@ export default function Awards() {
       description: "PT Paiton Operation and Maintenance Indonesia (POMI) meraih penghargaan EBTKE Award 2024 dalam kategori Efisiensi Energi / Bangunan Hemat Energi. Penghargaan ini diberikan oleh Kementerian Energi dan Sumber Daya Mineral Republik Indonesia pada acara Malam Anugerah EBTKE 2024 di Jakarta, pada 24 Februari 2025."
     },
     {
-      id: 27,
+      id: 22,
       title: "Siddhakarya Award",
       category: "Produktivitas Perusahaan",
       year: "2024",
-      image: "https://media.licdn.com/dms/image/v2/D5622AQFHFUvk6ocvkg/feedshare-shrink_1280/B56ZTtSh7gGsAk-/0/1739147846330?e=1762992000&v=beta&t=nihSz0dRKowpG_FoNl0bfOv_IqwsOE183_Qd6lSKxoA",
+      image: siddhakarya,
       description: "PT Paiton Operation and Maintenance Indonesia (POMI) meraih penghargaan Siddhakarya Award 2024 dalam kategori Produktivitas Perusahaan. Penghargaan ini diberikan oleh Kementerian Ketenagakerjaan Republik Indonesia pada acara Malam Anugerah Siddhakarya 2024 di Jakarta, pada 24 Februari 2025."
     },
     {
-      id: 28,
+      id: 23,
       title: "CSR Award",
       category: "Tanggung Jawab Sosial Perusahaan",
       year: "2024",
@@ -231,12 +220,20 @@ export default function Awards() {
       description: "PT Paiton Operation and Maintenance Indonesia (POMI) meraih penghargaan CSR Award 2024 dalam kategori Tanggung Jawab Sosial Perusahaan. Penghargaan ini diberikan oleh Kementerian Ketenagakerjaan Republik Indonesia pada acara Malam Anugerah CSR 2024 di Jakarta, pada 24 Februari 2025."
     },
     {
-      id: 29,
+      id: 24,
       title: "EDGE Final Certification – Green Building Council Indonesia",
       category: "Bangunan Hijau / Efisiensi Energi dan Sumber Daya",
       year: "2024",
       image: "https://media.licdn.com/dms/image/v2/D4E22AQE4XRLiYWiP3Q/feedshare-shrink_800/feedshare-shrink_800/0/1722907960279?e=1762992000&v=beta&t=V9M5RK7ePfMdDv9eXKSmRa-ogkzb9IgyfUGbtGgwf7Y",
       description: "PT Paiton Operation and Maintenance Indonesia (POMI) meraih sertifikasi EDGE Final 2024 dari Green Building Council Indonesia. Sertifikasi ini diberikan atas komitmen POMI dalam menerapkan praktik bangunan hijau dan efisiensi energi di seluruh operasionalnya."
+    },
+    {
+      id: 25,
+      title: "Kepesertaan BPJS Kesehatan",
+      category: "Bangunan Hijau / Efisiensi Energi dan Sumber Daya",
+      year: "2023 ",
+      image: kesehatan,
+      description: "Sertifikat ini menunjukkan keikutsertaan 100% karyawan dan anggota keluarganya dari Paiton Operation and Maintenance Indonesia, PT dalam program Jaminan Kesehatan Nasional - Kartu Indonesia Sehat (JKN-KIS)."
     },
   ];
 
@@ -314,10 +311,41 @@ export default function Awards() {
 
       {/* Awards Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentAwards.map((award) => (
-            <AwardCard key={award.id} award={award} />
-          ))}
+        <div className="rounded-2xl overflow-hidden bg-gradient-to-b from-white via-sky-50 to-white shadow-lg p-8">
+          <div className="max-w-4xl mx-auto text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-gray-900">Our Certifications & Awards</h2>
+            <p className="text-gray-600 mt-2">A curated showcase of our certifications, recognitions and achievements.</p>
+          </div>
+
+          <div className="relative">
+            {/* hover-to-open modal behavior; no preview panel */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[1fr] items-stretch">
+              {currentAwards.map((award) => (
+                  <div key={award.id} className="transform transition hover:scale-[1.02] h-full">
+                    <AwardCard award={award} onOpen={(a) => { setSelectedAward(a); setModalOpen(true); }} onHover={handleCardHover} />
+                  </div>
+                ))}
+            </div>
+          </div>
+        {/* Section-level Modal (single instance) */}
+        <Modal wide={true} open={modalOpen} onClose={() => setModalOpen(false)} title={selectedAward?.title}>
+          {selectedAward ? (
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="md:w-2/3 w-full bg-gray-50 flex items-center justify-center">
+                <img src={selectedAward.image} alt={selectedAward.title} className="w-full h-auto max-h-[70vh] object-contain" />
+              </div>
+              <div className="md:w-1/3 w-full">
+                <div className="mb-2 flex items-center gap-3">
+                  <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">{selectedAward.category}</span>
+                  <h4 className="text-lg font-semibold">{selectedAward.title}</h4>
+                </div>
+                <p className="text-sm text-gray-700 whitespace-pre-line">{selectedAward.description}</p>
+                <div className="mt-4 text-xs text-gray-500">Year: {selectedAward.year}</div>
+              </div>
+            </div>
+          ) : null}
+        </Modal>
         </div>
 
         {/* Pagination */}

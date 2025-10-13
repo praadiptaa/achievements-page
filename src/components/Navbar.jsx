@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Menu as MenuIcon, ChevronDown, X } from 'lucide-react'; 
 import Menu from './Menu';
-import icon1 from '../assets/images/icon1.png';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -14,16 +13,10 @@ export default function Navbar() {
       <nav className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            {/* Logo (from assets) */}
+            {/* Logo (single external image) */}
             <div className="flex-shrink-0">
-              <a href="#home" className="flex items-center gap-3">
-                <img src={icon1} alt="POMI logo" className="w-12 h-12 object-contain" />
-                <div className="flex flex-col">
-                  <span className="text-2xl font-bold text-gray-900">POMI</span>
-                  <span className="text-xs text-gray-600 uppercase tracking-wide leading-tight hidden sm:block">
-                    Paiton Operation & Maintenance<br/>Indonesia
-                  </span>
-                </div>
+              <a href="#home" className="flex items-center">
+                <img src="https://fleet.pomi.co.id/assets/img_logo/logo_pomi1.png" alt="POMI" className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 object-contain" />
               </a>
             </div>
 
@@ -54,6 +47,9 @@ export default function Navbar() {
                     </a>
                     <a href="#info-security" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                       Information Security Policy Statement
+                    </a>
+                     <a href="#awards-certificate" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      Awards & Certificates
                     </a>
                   </div>
                 )}
