@@ -39,7 +39,11 @@ export default function Navbar({ onNavigate, currentPage }) {
                 onMouseEnter={() => setActiveDropdown('about')}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <button className="px-4 py-2 text-gray-700 hover:text-blue-600 text-sm font-medium transition-colors flex items-center gap-1">
+                <button className={`px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1 ${
+                  ['history', 'vision-mission', 'awards'].includes(currentPage)
+                    ? 'text-blue-600 bg-blue-50'
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}>
                   ABOUT US
                   <ChevronDown size={16} className={`transition-transform ${activeDropdown === 'about' ? 'rotate-180' : ''}`} />
                 </button>
@@ -48,20 +52,36 @@ export default function Navbar({ onNavigate, currentPage }) {
                   <div className="absolute left-0 top-full mt-0 w-64 bg-white shadow-lg border-t-2 border-blue-600">
                     <button 
                       onClick={() => onNavigate('history')}
-                      className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      className={`block w-full text-left px-6 py-3 text-sm transition-colors ${
+                        currentPage === 'history'
+                          ? 'text-blue-600 bg-blue-50'
+                          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                      }`}
                     >
                       History
                     </button>
                     <button 
                       onClick={() => onNavigate('vision-mission')}
-                      className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      className={`block w-full text-left px-6 py-3 text-sm transition-colors ${
+                        currentPage === 'vision-mission'
+                          ? 'text-blue-600 bg-blue-50'
+                          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                      }`}
                     >
                       Vision, Mission, Policy & Services
                     </button>
-                    <a href="#info-security" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <a href="#info-security" className={`block px-6 py-3 text-sm transition-colors ${
+                      currentPage === 'info-security'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                    }`}>
                       Information Security Policy Statement
                     </a>
-                    <a href="#awards-certificate" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors" onClick={() => onNavigate('awards')}>
+                    <a href="#awards-certificate" className={`block px-6 py-3 text-sm transition-colors ${
+                      currentPage === 'awards'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                    }`} onClick={() => onNavigate('awards')}>
                       Awards & Certificates
                     </a>
                   </div>

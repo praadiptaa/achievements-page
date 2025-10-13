@@ -20,14 +20,9 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
       {/* Slide Menu */}
       <div className={`lg:hidden fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="h-full overflow-y-auto">
-          {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
             <div className="flex items-center gap-2">
-              <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 50C15 40 10 35 10 25C10 15 15 10 25 10" stroke="#0EA5E9" strokeWidth="6" strokeLinecap="round" fill="none"/>
-                <path d="M25 50C25 40 20 35 20 25C20 15 25 10 35 10" stroke="#0EA5E9" strokeWidth="6" strokeLinecap="round" fill="none"/>
-                <path d="M35 50C35 40 30 35 30 25C30 15 35 10 45 10" stroke="#10B981" strokeWidth="6" strokeLinecap="round" fill="none"/>
-              </svg>
+              <img src="https://fleet.pomi.co.id/assets/img_logo/logo_pomi1.png" alt="POMI" className="w-20 h-20 object-contain" />
             </div>
             <button
               onClick={onClose}
@@ -65,19 +60,41 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
                 <div className="bg-gray-50/50">
                   <button 
                     onClick={() => { onNavigate('history'); onClose(); }}
-                    className="block w-full text-left px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                    className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
+                      currentPage === 'history'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
                   >
                     History
                   </button>
                   <button 
                     onClick={() => { onNavigate('vision-mission'); onClose(); }}
-                    className="block w-full text-left px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                    className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
+                      currentPage === 'vision-mission'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
                   >
                     Vision, Mission, Policy & Services
                   </button>
-                  <a href="#info-security" className="block px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600" onClick={onClose}>
+                  <a href="#info-security" className={`block px-6 py-2.5 pl-10 text-sm transition-colors ${
+                    currentPage === 'info-security'
+                      ? 'text-blue-600 bg-blue-50'
+                      : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                  }`} onClick={onClose}>
                     Information Security Policy Statement
                   </a>
+                  <button 
+                    onClick={() => { onNavigate('awards'); onClose(); }}
+                    className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
+                      currentPage === 'awards'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+                  >
+                    Awards & Certificates
+                  </button>
                 </div>
               )}
             </div>
