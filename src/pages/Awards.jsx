@@ -18,6 +18,8 @@ import smp from '../assets/images/SMP.png'
 import kesehatan from '../assets/images/bpjs kesehatan.jpg'
 import siddhakarya from '../assets/images/siddhakarya.png'
 import proper from '../assets/images/proper.png'
+import iso55001 from '../assets/images/55001.png'
+import aeo from '../assets/images/AEO.png'
 // new import
 
 export default function Awards() {
@@ -71,7 +73,7 @@ export default function Awards() {
       title: "ISO 55001:2014",
       category: "Sistem Manajemen Aset",
       year: "2014",
-      image: "https://media.licdn.com/dms/image/v2/D4E12AQErTpwV6CdXLg/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1696633488036?e=2147483647&v=beta&t=oBYv0woSfvzKi45wBQV9vUEEmX0r46AgBmpCAA-v7dA",
+      image: iso55001,
       description: "Sertifikasi Sistem Manajemen Aset"
     },
     {
@@ -79,7 +81,7 @@ export default function Awards() {
       title: "Authorized Economic Operator (AEO)",
       category: "Occupational Health & Safety",
       year: "",
-      image: "https://www.sumitomocorp.com/asia-oceania/-/media/Images/ao/ssri/keyindustrialarea/AEO_smoll.jpg?h=250&iar=0&w=500",
+      image: aeo,
       description: "Otorisasi Operator Ekonomi Terpercaya dari Direktorat Jenderal Bea dan Cukai"
     },
     {
@@ -278,7 +280,7 @@ export default function Awards() {
  {/* Hero Section */}
       <div 
         ref={heroRef}
-        className="relative h-[60vh] min-h-[400px] overflow-hidden"
+        className="relative h-[40vh] sm:h-[50vh] lg:h-[60vh] min-h-[300px] sm:min-h-[400px] overflow-hidden"
       >
         {/* Latar belakang dengan efek parallax */}
         <div
@@ -296,13 +298,13 @@ export default function Awards() {
               isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Award size={40} className="text-blue-200" />
-              <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <Award size={32} className="text-blue-200 sm:w-10 sm:h-10" />
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
                 Awards & Certifications
               </h1>
             </div>
-            <p className="text-xl text-white max-w-3xl drop-shadow">
+            <p className="text-lg sm:text-xl text-white max-w-3xl drop-shadow">
               PT. POMI Paiton Operation & Maintenance Indonesia has received numerous awards and certifications in various fields, demonstrating our commitment to excellence, safety, environmental management, and corporate social responsibility.
             </p>
           </div>
@@ -310,17 +312,17 @@ export default function Awards() {
       </div>
 
       {/* Awards Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="rounded-2xl overflow-hidden bg-gradient-to-b from-white via-sky-50 to-white shadow-lg p-8">
-          <div className="max-w-4xl mx-auto text-center mb-8">
-            <h2 className="text-3xl font-extrabold text-gray-900">Our Certifications & Awards</h2>
-            <p className="text-gray-600 mt-2">A curated showcase of our certifications, recognitions and achievements.</p>
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-12">
+        <div className="rounded-2xl overflow-hidden bg-gradient-to-b from-white via-sky-50 to-white shadow-lg p-4 sm:p-6 lg:p-8">
+          <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Our Certifications & Awards</h2>
+            <p className="text-gray-600 mt-2 text-sm sm:text-base">A curated showcase of our certifications, recognitions and achievements.</p>
           </div>
 
           <div className="relative">
             {/* hover-to-open modal behavior; no preview panel */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[1fr] items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-[1fr] items-stretch">
               {currentAwards.map((award) => (
                   <div key={award.id} className="transform transition hover:scale-[1.02] h-full">
                     <AwardCard award={award} onOpen={(a) => { setSelectedAward(a); setModalOpen(true); }} onHover={handleCardHover} />
@@ -331,14 +333,14 @@ export default function Awards() {
         {/* Section-level Modal (single instance) */}
         <Modal wide={true} open={modalOpen} onClose={() => setModalOpen(false)} title={selectedAward?.title}>
           {selectedAward ? (
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="md:w-2/3 w-full bg-gray-50 flex items-center justify-center">
-                <img src={selectedAward.image} alt={selectedAward.title} className="w-full h-auto max-h-[70vh] object-contain" />
+            <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+              <div className="lg:w-2/3 w-full bg-gray-50 flex items-center justify-center">
+                <img src={selectedAward.image} alt={selectedAward.title} className="w-full h-auto max-h-[50vh] sm:max-h-[60vh] lg:max-h-[70vh] object-contain" />
               </div>
-              <div className="md:w-1/3 w-full">
-                <div className="mb-2 flex items-center gap-3">
-                  <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">{selectedAward.category}</span>
-                  <h4 className="text-lg font-semibold">{selectedAward.title}</h4>
+              <div className="lg:w-1/3 w-full">
+                <div className="mb-2 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full self-start">{selectedAward.category}</span>
+                  <h4 className="text-base sm:text-lg font-semibold">{selectedAward.title}</h4>
                 </div>
                 <p className="text-sm text-gray-700 whitespace-pre-line">{selectedAward.description}</p>
                 <div className="mt-4 text-xs text-gray-500">Year: {selectedAward.year}</div>
@@ -349,11 +351,11 @@ export default function Awards() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center gap-2 mt-12">
+        <div className="flex justify-center items-center gap-1 sm:gap-2 mt-8 sm:mt-12">
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
           >
             Previous
           </button>
@@ -362,7 +364,7 @@ export default function Awards() {
             <button
               key={index + 1}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-md transition-colors text-sm sm:text-base ${
                 currentPage === index + 1
                   ? 'bg-blue-600 text-white'
                   : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -375,7 +377,7 @@ export default function Awards() {
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
           >
             Next
           </button>
@@ -383,9 +385,9 @@ export default function Awards() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-16">
+      <footer className="bg-gray-800 text-white py-6 sm:py-8 mt-12 sm:mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© 2025 POMI - Paiton Operation & Maintenance Indonesia. All rights reserved.</p>
+          <p className="text-gray-400 text-sm sm:text-base">© 2025 POMI - Paiton Operation & Maintenance Indonesia. All rights reserved.</p>
         </div>
       </footer>
     </>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Menu as MenuIcon, ChevronDown, X } from 'lucide-react'; 
+import { Search, Menu as MenuIcon, ChevronDown, X } from 'lucide-react';
 import Menu from './Menu';
 
 export default function Navbar() {
@@ -48,7 +48,7 @@ export default function Navbar() {
                     <a href="#info-security" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                       Information Security Policy Statement
                     </a>
-                     <a href="#awards-certificate" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <a href="#awards-certificate" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                       Awards & Certificates
                     </a>
                   </div>
