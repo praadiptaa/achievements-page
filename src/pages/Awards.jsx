@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Award } from 'lucide-react';
+import { Award, ChevronLeft, ChevronRight } from 'lucide-react';
 import AwardCard from '../components/AwardCard';
 import Modal from '../components/Modal';
 import properUnit78 from '../assets/images/Sertifikat PROPER Unit 78 2015-2016.jpg'
@@ -20,7 +20,45 @@ import siddhakarya from '../assets/images/siddhakarya.png'
 import proper from '../assets/images/proper.png'
 import iso55001 from '../assets/images/55001.png'
 import aeo from '../assets/images/AEO.png'
-// new import
+// Background images
+import awardsBg from '../assets/images/csr star 5.png';
+import footerBg from '../assets/images/powerplant.jpg';
+
+<style jsx>{`
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(1deg); }
+  }
+
+  @keyframes cardGlow {
+    0%, 100% {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      filter: brightness(1);
+    }
+    50% {
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+      filter: brightness(1.05);
+    }
+  }
+
+  @keyframes bgFloat {
+    0%, 100% { background-position: center center; }
+    25% { background-position: center top; }
+    50% { background-position: center center; }
+    75% { background-position: center bottom; }
+  }
+
+  @keyframes awardShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes bgZoom {
+    0% { background-size: 100% 100%; }
+    50% { background-size: 110% 110%; }
+    100% { background-size: 100% 100%; }
+  }
+`}</style>
 
 export default function Awards() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -249,6 +287,7 @@ export default function Awards() {
   const heroRef = useRef(null);
   const [offsetY, setOffsetY] = useState(0);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [visibleSections, setVisibleSections] = useState({});
 
   useEffect(() => {
     let rafId = null;
@@ -273,6 +312,29 @@ export default function Awards() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
+  }, []);
+
+  // Intersection Observer for sections
+  useEffect(() => {
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections(prev => ({
+              ...prev,
+              [entry.target.id]: true
+            }));
+          }
+        });
+      },
+      { threshold: 0.2, rootMargin: '-50px' }
+    );
+
+    // Observe all sections
+    const sections = document.querySelectorAll('[data-section]');
+    sections.forEach(section => sectionObserver.observe(section));
+
+    return () => sectionObserver.disconnect();
   }, []);
 
   return (
@@ -309,10 +371,41 @@ export default function Awards() {
             </p>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
+          <Award size={24} className="text-white rotate-90" />
+        </div>
+
+        {/* Animated overlay particles */}
+        <div className="absolute inset-0 pointer-events-none z-10">
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-300/30 rounded-full animate-ping"></div>
+          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-300/40 rounded-full animate-pulse delay-1000"></div>
+          <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-white/20 rounded-full animate-bounce delay-500"></div>
+          <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-yellow-200/35 rounded-full animate-pulse delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 w-0.5 h-0.5 bg-white/50 rounded-full animate-ping delay-3000"></div>
+        </div>
       </div>
 
       {/* Awards Grid */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-12">
+      <div 
+        id="awards-section"
+        data-section
+        className={`max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-12 transition-all duration-1000 ${
+          visibleSections['awards-section'] 
+            ? 'opacity-100 translate-y-0' 
+            : 'opacity-0 translate-y-8'
+        }`}
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), 
+                           linear-gradient(rgba(59, 130, 246, 0.02), rgba(59, 130, 246, 0.02)), 
+                           url('${awardsBg}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          animation: visibleSections['awards-section'] ? 'bgFloat 20s ease-in-out infinite' : 'none'
+        }}
+      >
         <div className="rounded-2xl overflow-hidden bg-gradient-to-b from-white via-sky-50 to-white shadow-lg p-4 sm:p-6 lg:p-8">
           <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Our Certifications & Awards</h2>
@@ -323,8 +416,21 @@ export default function Awards() {
             {/* hover-to-open modal behavior; no preview panel */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-[1fr] items-stretch">
-              {currentAwards.map((award) => (
-                  <div key={award.id} className="transform transition hover:scale-[1.02] h-full">
+              {currentAwards.map((award, index) => (
+                  <div 
+                    key={award.id} 
+                    className={`transform transition-all duration-500 hover:scale-105 h-full ${
+                      visibleSections['awards-section'] 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 translate-y-8'
+                    }`}
+                    style={{
+                      transitionDelay: visibleSections['awards-section'] ? `${index * 150}ms` : '0ms',
+                      animation: visibleSections['awards-section'] 
+                        ? `cardFloat 8s ease-in-out infinite ${index * 0.8}s, cardGlow 6s ease-in-out infinite ${index * 0.5}s` 
+                        : 'none'
+                    }}
+                  >
                     <AwardCard award={award} onOpen={(a) => { setSelectedAward(a); setModalOpen(true); }} onHover={handleCardHover} />
                   </div>
                 ))}
@@ -351,41 +457,56 @@ export default function Awards() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center gap-1 sm:gap-2 mt-8 sm:mt-12">
+        <div className="flex justify-center items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+            className="group flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-200 transition-all duration-200 hover:shadow-sm"
           >
-            Previous
+            <ChevronLeft size={16} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+            <span className="font-medium">Previous</span>
           </button>
           
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 sm:px-4 py-2 rounded-md transition-colors text-sm sm:text-base ${
-                currentPage === index + 1
-                  ? 'bg-blue-600 text-white'
-                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
+          <div className="flex gap-1">
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 ${
+                  currentPage === index + 1
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
           
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+            className="group flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-200 transition-all duration-200 hover:shadow-sm"
           >
-            Next
+            <span className="font-medium">Next</span>
+            <ChevronRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
           </button>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 sm:py-8 mt-12 sm:mt-16">
+      <footer 
+        className="bg-gray-800 text-white py-6 sm:py-8 mt-12 sm:mt-16"
+        style={{
+          backgroundImage: `linear-gradient(rgba(31, 41, 55, 0.95), rgba(31, 41, 55, 0.95)), 
+                           linear-gradient(rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.1)), 
+                           url('${footerBg}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          animation: 'bgZoom 25s ease-in-out infinite'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-400 text-sm sm:text-base">© 2025 POMI - Paiton Operation & Maintenance Indonesia. All rights reserved.</p>
         </div>

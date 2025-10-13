@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { X, ChevronDown, ChevronUp } from 'lucide-react';
 
-export default function Menu({ isOpen, onClose }) {
+export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
   // State untuk mengontrol dropdown "About Us"
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
@@ -39,13 +39,16 @@ export default function Menu({ isOpen, onClose }) {
 
           {/* Menu Items */}
           <div className="py-2">
-            <a
-              href="#home"
-              className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium"
-              onClick={onClose}
+            <button
+              onClick={() => { onNavigate('home'); onClose(); }}
+              className={`block w-full text-left px-6 py-3 text-sm font-medium ${
+                currentPage === 'home'
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              }`}
             >
               HOME
-            </a>
+            </button>
 
             {/* IMPROVEMENT: 'About Us' sekarang menjadi accordion yang bisa dibuka-tutup */}
             <div className="border-t border-gray-100">
@@ -60,12 +63,18 @@ export default function Menu({ isOpen, onClose }) {
               {/* Sub-menu akan muncul jika isAboutOpen bernilai true */}
               {isAboutOpen && (
                 <div className="bg-gray-50/50">
-                  <a href="#history" className="block px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600" onClick={onClose}>
+                  <button 
+                    onClick={() => { onNavigate('history'); onClose(); }}
+                    className="block w-full text-left px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                  >
                     History
-                  </a>
-                  <a href="#vision" className="block px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600" onClick={onClose}>
+                  </button>
+                  <button 
+                    onClick={() => { onNavigate('vision-mission'); onClose(); }}
+                    className="block w-full text-left px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                  >
                     Vision, Mission, Policy & Services
-                  </a>
+                  </button>
                   <a href="#info-security" className="block px-6 py-2.5 pl-10 text-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600" onClick={onClose}>
                     Information Security Policy Statement
                   </a>

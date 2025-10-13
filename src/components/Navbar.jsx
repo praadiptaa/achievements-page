@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Menu as MenuIcon, ChevronDown, X } from 'lucide-react';
 import Menu from './Menu';
 
-export default function Navbar() {
+export default function Navbar({ onNavigate, currentPage }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -22,9 +22,16 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
-              <a href="#home" className="px-4 py-2 text-gray-700 hover:text-blue-600 text-sm font-medium transition-colors">
+              <button
+                onClick={() => onNavigate('home')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  currentPage === 'home'
+                    ? 'text-blue-600 bg-blue-50'
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
                 HOME
-              </a>
+              </button>
               
               {/* About Us Dropdown */}
               <div 
@@ -39,16 +46,22 @@ export default function Navbar() {
                 
                 {activeDropdown === 'about' && (
                   <div className="absolute left-0 top-full mt-0 w-64 bg-white shadow-lg border-t-2 border-blue-600">
-                    <a href="#history" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <button 
+                      onClick={() => onNavigate('history')}
+                      className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    >
                       History
-                    </a>
-                    <a href="#vision" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    </button>
+                    <button 
+                      onClick={() => onNavigate('vision-mission')}
+                      className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    >
                       Vision, Mission, Policy & Services
-                    </a>
+                    </button>
                     <a href="#info-security" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                       Information Security Policy Statement
                     </a>
-                    <a href="#awards-certificate" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <a href="#awards-certificate" className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors" onClick={() => onNavigate('awards')}>
                       Awards & Certificates
                     </a>
                   </div>
@@ -94,6 +107,8 @@ export default function Navbar() {
       <Menu 
         isOpen={isMobileMenuOpen} 
         onClose={() => setIsMobileMenuOpen(false)} 
+        onNavigate={onNavigate}
+        currentPage={currentPage}
       />
     </>
   );
