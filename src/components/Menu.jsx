@@ -18,11 +18,11 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
       )}
 
       {/* Slide Menu */}
-      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+  <div className={`lg:hidden fixed top-0 right-0 h-full w-72 sm:w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="h-full overflow-y-auto">
           <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
             <div className="flex items-center gap-2">
-              <img src="https://fleet.pomi.co.id/assets/img_logo/logo_pomi1.png" alt="POMI" className="w-20 h-20 object-contain" />
+              <img src="https://fleet.pomi.co.id/assets/img_logo/logo_pomi1.png" alt="POMI" className="h-10 sm:h-14 w-auto object-contain" />
             </div>
             <button
               onClick={onClose}
@@ -78,13 +78,16 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
                   >
                     Vision, Mission, Policy & Services
                   </button>
-                  <a href="#info-security" className={`block px-6 py-2.5 pl-10 text-sm transition-colors ${
-                    currentPage === 'info-security'
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
-                  }`} onClick={onClose}>
+                  <button
+                    onClick={() => { onNavigate('info-security'); onClose(); }}
+                    className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
+                      currentPage === 'info-security'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+                  >
                     Information Security Policy Statement
-                  </a>
+                  </button>
                   <button 
                     onClick={() => { onNavigate('awards'); onClose(); }}
                     className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
@@ -99,37 +102,33 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
               )}
             </div>
 
-            <a
-              href="#csr"
-              className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
-              onClick={onClose}
+            <button
+              onClick={() => { onNavigate('csr'); onClose(); }}
+              className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
             >
               CORPORATE SOCIAL RESPONSIBILITY
-            </a>
+            </button>
 
-            <a
-              href="#environmental"
-              className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
-              onClick={onClose}
+            <button
+              onClick={() => { onNavigate('environmental'); onClose(); }}
+              className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
             >
               ENVIRONMENTAL
-            </a>
+            </button>
 
-            <a
-              href="#careers"
-              className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
-              onClick={onClose}
+            <button
+              onClick={() => { onNavigate('careers'); onClose(); }}
+              className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
             >
               CAREERS
-            </a>
+            </button>
 
-            <a
-              href="#contact"
-              className="block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
-              onClick={onClose}
+            <button
+              onClick={() => { onNavigate('contact'); onClose(); }}
+              className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
             >
               CONTACT US
-            </a>
+            </button>
           </div>
         </div>
       </div>

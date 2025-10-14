@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Award, ChevronRight, Play } from 'lucide-react';
 import powerplantImage from '../assets/images/powerplant.jpg';
-import pomiLogo from '../assets/images/logo-pomi.png';
 import heroPomi from '../assets/images/hero-pomi.jpg';
 import heroPomi1 from '../assets/images/hero-pomi1.jpg';
 import heroPomi2 from '../assets/images/hero-pomi2.jpg';
@@ -9,6 +8,8 @@ import heroPomi3 from '../assets/images/hero-pomi3.jpg';
 import csr from '../assets/images/csr.jpg';
 import envi from '../assets/images/enviroment.jpg';
 import safety from '../assets/images/safety.jpg';
+import WpPostsDemo from '../components/WpPostsDemo';
+import { WP_API } from '../constants/wp';
 
 <style jsx>{`
   @keyframes float {
@@ -97,7 +98,7 @@ import safety from '../assets/images/safety.jpg';
   }
 `}</style>
 
-export default function Home({ onNavigate }) {
+export default function Home({ onNavigate, onOpenPost }) {
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [visibleSections, setVisibleSections] = useState({});
@@ -257,29 +258,19 @@ export default function Home({ onNavigate }) {
               isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <img
-                src={pomiLogo}
-                alt="PT. POMI Logo"
-                className="h-16 w-auto sm:h-20 md:h-24"
-                style={{
-                  animation: isHeroVisible ? 'logoGlow 3s ease-in-out infinite' : 'none'
-                }}
-              />
-            </div>
             <div className="mb-8">
-              <h2 className="text-2xl md:text-4xl font-semibold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out"
+              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center"
                   style={{
                     animation: isHeroVisible ? 'slideInRight 0.8s ease-out forwards' : 'none',
-                    transform: isHeroVisible ? 'translateX(0)' : 'translateX(50px)',
+                    transform: isHeroVisible ? 'translateX(0) translateY(-12px)' : 'translateX(50px) translateY(0)',
                     opacity: isHeroVisible ? 1 : 0
                   }}>
                 {heroImages[currentSlide].title}
               </h2>
-              <p className="text-xl md:text-2xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300"
+              <p className="text-lg md:text-xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300 mx-auto text-center"
                  style={{
                    animation: isHeroVisible ? 'slideInRight 0.8s ease-out 0.3s forwards' : 'none',
-                   transform: isHeroVisible ? 'translateX(0)' : 'translateX(50px)',
+                   transform: isHeroVisible ? 'translateX(0) translateY(-6px)' : 'translateX(50px) translateY(0)',
                    opacity: isHeroVisible ? 1 : 0
                  }}>
                 {heroImages[currentSlide].subtitle}
@@ -466,6 +457,18 @@ export default function Home({ onNavigate }) {
           </div>
         </div>
       </div>
+  {/* WordPress posts demo (headless) */}
+  <section id="wp-posts" data-section className={`py-16 transition-all duration-700 ${visibleSections['wp-posts'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mb-8 text-center">
+        <h2 className="text-3xl font-bold">Latest from POMI</h2>
+        <p className="mt-2 text-gray-600">News, announcements, and updates from POMI.</p>
+      </div>
+
+      {/* Use WordPress.com Public API endpoint (returns 200) to avoid CORS/login redirects */}
+      <WpPostsDemo baseUrl={WP_API} onOpenPost={onOpenPost} />
+    </div>
+  </section>
       <footer className="bg-gray-800 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-400">© 2025 POMI - Paiton Operation & Maintenance Indonesia. All rights reserved.</p>

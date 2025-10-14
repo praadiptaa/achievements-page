@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Target, Eye, Shield, Users, Award, CheckCircle, Heart, Leaf, TrendingUp, Building, ChevronRight } from 'lucide-react';
-import pomiLogo from '../assets/images/logo-pomi.png';
 import heroPomi from '../assets/images/hero-pomi.jpg';
 import heroPomi1 from '../assets/images/hero-pomi1.jpg';
 import heroPomi2 from '../assets/images/hero-pomi2.jpg';
@@ -222,29 +221,19 @@ export default function VisionMission() {
               isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <img
-                src={pomiLogo}
-                alt="PT. POMI Logo"
-                className="h-16 w-auto sm:h-20 md:h-24"
-                style={{
-                  animation: isHeroVisible ? 'logoGlow 3s ease-in-out infinite' : 'none'
-                }}
-              />
-            </div>
             <div className="mb-8">
-              <h2 className="text-2xl md:text-4xl font-semibold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out"
+              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center"
                   style={{
                     animation: isHeroVisible ? 'slideInRight 0.8s ease-out forwards' : 'none',
-                    transform: isHeroVisible ? 'translateX(0)' : 'translateX(50px)',
+                    transform: isHeroVisible ? 'translateX(0) translateY(-12px)' : 'translateX(50px) translateY(0)',
                     opacity: isHeroVisible ? 1 : 0
                   }}>
                 {heroImages[currentSlide].title}
               </h2>
-              <p className="text-xl md:text-2xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300"
+              <p className="text-lg md:text-xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300 mx-auto text-center"
                  style={{
                    animation: isHeroVisible ? 'slideInRight 0.8s ease-out 0.3s forwards' : 'none',
-                   transform: isHeroVisible ? 'translateX(0)' : 'translateX(50px)',
+                   transform: isHeroVisible ? 'translateX(0) translateY(-6px)' : 'translateX(50px) translateY(0)',
                    opacity: isHeroVisible ? 1 : 0
                  }}>
                 {heroImages[currentSlide].subtitle}

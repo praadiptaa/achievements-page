@@ -355,20 +355,13 @@ export default function Awards() {
         
         {/* Konten dengan efek fade-in */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
-          <div 
-            className={`transition-all duration-1000 ease-out ${
-              isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <Award size={32} className="text-blue-200 sm:w-10 sm:h-10" />
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-                Awards & Certifications
-              </h1>
+          <div className={`transition-all duration-1000 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center" style={{ transform: isHeroVisible ? 'translateY(-12px)' : 'translateY(0)' }}>{'Awards & Certifications'}</h2>
+              <p className="text-lg md:text-xl text-white max-w-3xl mx-auto text-center drop-shadow-2xl" style={{ transform: isHeroVisible ? 'translateY(-6px)' : 'translateY(0)' }}>
+                PT. POMI Paiton Operation & Maintenance Indonesia has received numerous awards and certifications in various fields, demonstrating our commitment to excellence, safety, environmental management, and corporate social responsibility.
+              </p>
             </div>
-            <p className="text-lg sm:text-xl text-white max-w-3xl drop-shadow">
-              PT. POMI Paiton Operation & Maintenance Indonesia has received numerous awards and certifications in various fields, demonstrating our commitment to excellence, safety, environmental management, and corporate social responsibility.
-            </p>
           </div>
         </div>
 
