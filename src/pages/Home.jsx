@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Award, ChevronRight, Play } from 'lucide-react';
 import powerplantImage from '../assets/images/powerplant.jpg';
 import heroPomi from '../assets/images/hero-pomi.jpg';
-import heroPomi1 from '../assets/images/hero-pomi1.jpg';
-import heroPomi2 from '../assets/images/hero-pomi2.jpg';
-import heroPomi3 from '../assets/images/hero-pomi3.jpg';
 import csr from '../assets/images/csr.jpg';
 import envi from '../assets/images/enviroment.jpg';
 import safety from '../assets/images/safety.jpg';
 import WpPostsDemo from '../components/WpPostsDemo';
 import { WP_API } from '../constants/wp';
+// NOTE: add your hero video files at these paths or update the imports to point to your files
+import heroVideoMp4 from '../assets/videos/hero.mp4';
 
 <style jsx>{`
   @keyframes float {
@@ -100,33 +99,10 @@ import { WP_API } from '../constants/wp';
 
 export default function Home({ onNavigate, onOpenPost }) {
   const [isHeroVisible, setIsHeroVisible] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [visibleSections, setVisibleSections] = useState({});
   const heroRef = useRef(null);
-
-  // Hero images for carousel
-  const heroImages = [
-    {
-      url: heroPomi,
-      title: 'Welcome to PT. Paiton Operation & Maintenance Indonesia',
-      subtitle: 'A world class power generation O&M Company'
-    },
-    {
-      url: heroPomi1,
-      title: 'Welcome to PT. Paiton Operation & Maintenance Indonesia',
-      subtitle: 'A world class power generation O&M Company'
-    },
-    {
-      url: heroPomi2,
-      title: 'Welcome to PT. Paiton Operation & Maintenance Indonesia',
-      subtitle: 'A world class power generation O&M Company'
-    },
-    {
-      url: heroPomi3,
-      title: 'Welcome to PT. Paiton Operation & Maintenance Indonesia',
-      subtitle: 'A world class power generation O&M Company'
-    }
-  ];
+  const videoRef = useRef(null);
+  const [isVideoSharpEnough, setIsVideoSharpEnough] = useState(true);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -168,23 +144,50 @@ export default function Home({ onNavigate, onOpenPost }) {
     return () => sectionObserver.disconnect();
   }, []);
 
-  // Auto-slide functionality
+  // Play/pause video based on hero visibility
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000); // Change slide every 5 seconds
+    const video = videoRef.current;
+    if (!video) return;
+    if (isHeroVisible) {
+      // Some browsers require play() to be triggered from a user gesture; muted allows autoplay in most browsers
+      const p = video.play();
+      if (p && p.catch) p.catch(() => { /* ignore autoplay rejection silently */ });
+    } else {
+      try { video.pause(); } catch { /* ignore */ }
+    }
+  }, [isHeroVisible]);
 
-    return () => clearInterval(interval);
-  }, [heroImages.length]);
+  // Check video native resolution and compare to hero container to avoid upscaling low-res video
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  // Manual navigation functions
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-  };
+    function checkResolution() {
+      const heroEl = heroRef.current;
+      if (!heroEl) return;
+      const dpr = window.devicePixelRatio || 1;
+      const neededW = Math.round(heroEl.clientWidth * dpr);
+      const neededH = Math.round(heroEl.clientHeight * dpr);
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
-  };
+      // If native video resolution is less than needed, fallback to poster to avoid pixelation
+      if ((video.videoWidth && video.videoHeight) && (video.videoWidth < neededW || video.videoHeight < neededH)) {
+        setIsVideoSharpEnough(false);
+  try { video.pause(); } catch { void 0; }
+      } else {
+        setIsVideoSharpEnough(true);
+      }
+    }
+
+    // run check after metadata is loaded
+    if (video.readyState >= 1) checkResolution();
+    const onLoaded = () => checkResolution();
+    video.addEventListener('loadedmetadata', onLoaded);
+    window.addEventListener('resize', checkResolution);
+    return () => {
+      video.removeEventListener('loadedmetadata', onLoaded);
+      window.removeEventListener('resize', checkResolution);
+    };
+  }, []);
 
   const services = [
     {
@@ -206,49 +209,40 @@ export default function Home({ onNavigate, onOpenPost }) {
 
   return (
     <>
-      {/* Hero Section with Image Carousel */}
+      {/* Hero Section with Full Screen Video */}
       <div
         ref={heroRef}
-        className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] overflow-hidden"
+        className="relative h-screen w-full overflow-hidden"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%)'
+          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%)',
+          position: 'relative',
+          zIndex: 1
         }}
       >
-        {/* Image Carousel */}
+        {/* Video Hero: autoplay (muted) with poster fallback. Ensure heroVideoMp4 / heroVideoWebm exist in assets/videos/ */}
         <div className="absolute inset-0">
-          {heroImages.map((image, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-                index === currentSlide
-                  ? 'opacity-100'
-                  : 'opacity-0'
-              }`}
-              style={{
-                animation: index === currentSlide
-                  ? 'parallaxMove 8s ease-in-out infinite, zoomPulse 4s ease-in-out infinite'
-                  : index === ((currentSlide - 1 + heroImages.length) % heroImages.length)
-                    ? 'slideOutLeft 1s ease-in-out forwards'
-                    : 'none',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              <div
-                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
-                  index === currentSlide ? 'scale-100' : 'scale-110'
-                }`}
-                style={{
-                  backgroundImage: `linear-gradient(${
-                    index === currentSlide
-                      ? 'rgba(0,0,0,0.4), rgba(0,0,0,0.4)'
-                      : 'rgba(0,0,0,0.6), rgba(0,0,0,0.6)'
-                  }), url('${image.url}')`,
-                  animation: index === currentSlide ? 'none' : 'slideInRight 1s ease-out forwards',
-                  transformOrigin: 'center center'
-                }}
-              />
-            </div>
-          ))}
+          {isVideoSharpEnough ? (
+            <>
+              <video
+                ref={videoRef}
+                className="absolute inset-0 w-full h-full object-cover"
+                poster={heroPomi}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Hero background video"
+              >
+                {/* MP4 source (you added hero.mp4) */}
+                <source src={heroVideoMp4} type="video/mp4" />
+              </video>
+              {/* Subtle overlay so white text remains readable */}
+              <div className="absolute inset-0 bg-black/30"></div>
+            </>
+          ) : (
+            // If video is not sharp enough, show the poster image instead to avoid pixelation
+            <img src={heroPomi} alt="Hero poster" className="absolute inset-0 w-full h-full object-cover" />
+          )}
         </div>
 
         {/* Content */}
@@ -265,7 +259,7 @@ export default function Home({ onNavigate, onOpenPost }) {
                     transform: isHeroVisible ? 'translateX(0) translateY(-12px)' : 'translateX(50px) translateY(0)',
                     opacity: isHeroVisible ? 1 : 0
                   }}>
-                {heroImages[currentSlide].title}
+                Welcome to PT. Paiton Operation & Maintenance Indonesia
               </h2>
               <p className="text-lg md:text-xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300 mx-auto text-center"
                  style={{
@@ -273,45 +267,11 @@ export default function Home({ onNavigate, onOpenPost }) {
                    transform: isHeroVisible ? 'translateX(0) translateY(-6px)' : 'translateX(50px) translateY(0)',
                    opacity: isHeroVisible ? 1 : 0
                  }}>
-                {heroImages[currentSlide].subtitle}
+                A world class power generation O&M Company
               </p>
             </div>
           </div>
         </div>
-
-        {/* Carousel Navigation Dots */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3 z-20">
-          {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? 'bg-white scale-125'
-                  : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Left Navigation Button */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white p-5 rounded-full transition-all duration-300 hover:scale-110 group"
-          aria-label="Previous slide"
-        >
-          <ChevronRight size={20} className="rotate-180 group-hover:-translate-x-1 transition-transform duration-200" />
-        </button>
-
-        {/* Right Navigation Button */}
-        <button
-          onClick={nextSlide}
-          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white p-5 rounded-full transition-all duration-300 hover:scale-110 group"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
@@ -331,22 +291,29 @@ export default function Home({ onNavigate, onOpenPost }) {
       <div 
         id="about-section" 
         data-section 
-        className={`py-16 bg-gradient-to-br from-blue-50 via-white to-blue-50 transition-all duration-1000 ${
+        className={`py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 relative overflow-hidden transition-all duration-1000 ${
           visibleSections['about-section'] 
             ? 'opacity-100 translate-y-0' 
             : 'opacity-0 translate-y-8'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className={`text-3xl md:text-4xl font-bold text-gray-900 mb-4 transition-all duration-700 delay-200 ${
+        {/* Floating background elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className={`text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 bg-clip-text text-transparent mb-6 transition-all duration-700 delay-200 ${
               visibleSections['about-section'] 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-4'
             }`}>
               ABOUT US
             </h2>
-            <p className={`text-xl text-gray-600 max-w-3xl mx-auto transition-all duration-700 delay-400 ${
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mb-8 rounded-full"></div>
+            <p className={`text-lg md:text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed transition-all duration-700 delay-400 ${
               visibleSections['about-section'] 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-4'
@@ -356,57 +323,86 @@ export default function Home({ onNavigate, onOpenPost }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Our Mission</h3>
-              <p className="text-gray-600 mb-6">
-                Paiton Operations & Maintenance Indonesia (POMI) operates and maintains the Paiton Energy Power Plant while promoting safety and environmental best practices, offering sustained financial returns for its Owners and achieving excellence in all that it does.
-              </p>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Our Vision</h3>
-              <p className="text-gray-600">
-                Paiton Operations & Maintenance Indonesia (POMI) will be recognized as a World Class operator of Power Plants.
-              </p>
-              <div className="mt-8 space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Text Content */}
+            <div className={`space-y-8 transition-all duration-700 delay-500 ${
+              visibleSections['about-section'] 
+                ? 'opacity-100 translate-x-0' 
+                : 'opacity-0 -translate-x-8'
+            }`}>
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                  <span className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></span>
+                  Our Mission
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Paiton Operations & Maintenance Indonesia (POMI) operates and maintains the Paiton Energy Power Plant while promoting safety and environmental best practices, offering sustained financial returns for its Owners and achieving excellence in all that it does.
+                </p>
+              </div>
+
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                  <span className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></span>
+                  Our Vision
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Paiton Operations & Maintenance Indonesia (POMI) will be recognized as a World Class operator of Power Plants.
+                </p>
+              </div>
+
+              {/* Quick Links */}
+              <div className="grid grid-cols-2 gap-3 mt-8">
                 <button 
                   onClick={() => onNavigate('history')}
-                  className="block text-blue-600 hover:text-blue-800 font-medium cursor-pointer transition-all duration-300 hover:translate-x-2 hover:scale-105"
+                  className="group bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2"
                 >
-                  HISTORY
+                  <span>HISTORY</span>
+                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
-                <a href="#ethics" className="block text-blue-600 hover:text-blue-800 font-medium transition-all duration-300 hover:translate-x-2 hover:scale-105">
-                  ETHICS
+                <a href="#ethics" className="group bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2">
+                  <span>ETHICS</span>
+                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </a>
                 <button 
                   onClick={() => onNavigate('vision-mission')}
-                  className="block text-blue-600 hover:text-blue-800 font-medium cursor-pointer transition-all duration-300 hover:translate-x-2 hover:scale-105"
+                  className="group col-span-2 bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
                 >
-                  VISION, MISSION & POLICY
+                  <span>VISION, MISSION & POLICY</span>
+                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
-                <a href="#awards-certificate" onClick={() => onNavigate('awards')} className="block text-blue-600 hover:text-blue-800 font-medium cursor-pointer transition-all duration-300 hover:translate-x-2 hover:scale-105">
-                  AWARDS & CERTIFICATE
+                <a href="#awards-certificate" onClick={() => onNavigate('awards')} className="group col-span-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2">
+                  <span>AWARDS & CERTIFICATE</span>
+                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </a>
               </div>
             </div>
-            <div className="relative group">
-              <div
-                className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"
-              ></div>
-              <img
-                src={powerplantImage}
-                alt="Power Plant Operations"
-                className="relative rounded-lg shadow-lg w-full transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
-                style={{
-                  animation: visibleSections['about-section']
-                    ? 'imageFloat 6s ease-in-out infinite, imageGlow 4s ease-in-out infinite, borderPulse 3s ease-in-out infinite, imageZoom 8s ease-in-out infinite'
-                    : 'none',
-                  border: '2px solid rgba(59, 130, 246, 0.2)',
-                  borderRadius: '0.5rem'
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <p className="text-sm font-medium drop-shadow-lg">PLTU Paiton Building</p>
+
+            {/* Image */}
+            <div className={`relative group transition-all duration-700 delay-700 ${
+              visibleSections['about-section'] 
+                ? 'opacity-100 translate-x-0' 
+                : 'opacity-0 translate-x-8'
+            }`}>
+              <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 rounded-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500 blur-2xl"></div>
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/50">
+                <img
+                  src={powerplantImage}
+                  alt="Power Plant Operations"
+                  className="relative w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/10 transition-colors duration-500"></div>
+                
+                {/* Overlay Label */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/50 to-transparent transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                  <p className="text-white text-lg font-bold drop-shadow-lg">PLTU Paiton Building</p>
+                  <p className="text-blue-200 text-sm mt-1">World-Class Power Generation Facility</p>
+                </div>
               </div>
+
+              {/* Floating decoration */}
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
+              <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-full opacity-20 blur-2xl animate-pulse delay-1000"></div>
             </div>
           </div>
         </div>
@@ -416,62 +412,133 @@ export default function Home({ onNavigate, onOpenPost }) {
       <div 
         id="services-section" 
         data-section 
-        className={`py-16 bg-gray-50 transition-all duration-1000 ${
+        className={`py-20 bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 relative overflow-hidden transition-all duration-1000 ${
           visibleSections['services-section'] 
             ? 'opacity-100 translate-y-0' 
             : 'opacity-0 translate-y-8'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Animated background grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
+        
+        {/* Floating orbs */}
+        <div className="absolute top-20 left-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className={`text-4xl md:text-5xl font-bold text-white mb-6 transition-all duration-700 delay-200 ${
+              visibleSections['services-section'] 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 translate-y-4'
+            }`}>
+              Our Core Services
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mb-6 rounded-full"></div>
+            <p className={`text-lg text-gray-300 max-w-3xl mx-auto transition-all duration-700 delay-400 ${
+              visibleSections['services-section'] 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 translate-y-4'
+            }`}>
+              Excellence in power generation through quality, environment, and safety
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <div 
                 key={index} 
-                className={`bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-500 overflow-hidden transform hover:scale-105 hover:-translate-y-2 ${
+                className={`group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-blue-400/50 transition-all duration-500 hover:scale-105 hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/20 ${
                   visibleSections['services-section'] 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-8'
                 }`}
                 style={{
-                  transitionDelay: visibleSections['services-section'] ? `${index * 200}ms` : '0ms',
-                  animation: visibleSections['services-section'] ? `float 6s ease-in-out infinite ${index * 0.5}s` : 'none'
+                  transitionDelay: visibleSections['services-section'] ? `${index * 200}ms` : '0ms'
                 }}
               >
-                <div className="h-48 overflow-hidden relative group">
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 via-indigo-600/0 to-blue-600/0 group-hover:from-blue-600/20 group-hover:via-indigo-600/10 group-hover:to-blue-600/20 transition-all duration-500 z-10 pointer-events-none"></div>
+                
+                {/* Image */}
+                <div className="h-56 overflow-hidden relative">
                   <img
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
                     onError={(e) => {
                       e.target.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(service.title);
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* Image overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-500"></div>
+                  
+                  {/* Floating badge */}
+                  <div className="absolute top-4 right-4 w-12 h-12 bg-blue-500/90 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                    {index + 1}
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{service.title}</h3>
-                  <p className="text-gray-600">{service.description}</p>
+
+                {/* Content */}
+                <div className="p-6 relative z-20">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
+                    {service.description}
+                  </p>
                 </div>
+
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               </div>
             ))}
           </div>
         </div>
       </div>
   {/* WordPress posts demo (headless) */}
-  <section id="wp-posts" data-section className={`py-16 transition-all duration-700 ${visibleSections['wp-posts'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold">Latest from POMI</h2>
-        <p className="mt-2 text-gray-600">News, announcements, and updates from POMI.</p>
+  <section id="wp-posts" data-section className={`py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden transition-all duration-700 ${visibleSections['wp-posts'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+    {/* Subtle background decoration */}
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute top-10 right-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 left-10 w-72 h-72 bg-indigo-200/20 rounded-full blur-3xl"></div>
+    </div>
+
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="mb-12 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 bg-clip-text text-transparent mb-4">
+          Latest from POMI
+        </h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mb-6 rounded-full"></div>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          News, announcements, and updates from POMI.
+        </p>
       </div>
 
       {/* Use WordPress.com Public API endpoint (returns 200) to avoid CORS/login redirects */}
       <WpPostsDemo baseUrl={WP_API} onOpenPost={onOpenPost} />
     </div>
   </section>
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© 2025 POMI - Paiton Operation & Maintenance Indonesia. All rights reserved.</p>
+      <footer className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white py-12 relative overflow-hidden">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="mb-4">
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto mb-6 rounded-full"></div>
+            <p className="text-gray-300 text-lg font-medium">
+              © 2025 POMI - Paiton Operation & Maintenance Indonesia
+            </p>
+            <p className="text-gray-500 mt-2">All rights reserved.</p>
+          </div>
+          
+          {/* Decorative elements */}
+          <div className="flex justify-center gap-2 mt-6 opacity-50">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse delay-300"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-700"></div>
+          </div>
         </div>
       </footer>
     </>

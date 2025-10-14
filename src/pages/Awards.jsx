@@ -20,45 +20,6 @@ import siddhakarya from '../assets/images/siddhakarya.png'
 import proper from '../assets/images/proper.png'
 import iso55001 from '../assets/images/55001.png'
 import aeo from '../assets/images/AEO.png'
-// Background images
-import awardsBg from '../assets/images/csr star 5.png';
-import footerBg from '../assets/images/powerplant.jpg';
-
-<style jsx>{`
-  @keyframes cardFloat {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(1deg); }
-  }
-
-  @keyframes cardGlow {
-    0%, 100% {
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      filter: brightness(1);
-    }
-    50% {
-      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
-      filter: brightness(1.05);
-    }
-  }
-
-  @keyframes bgFloat {
-    0%, 100% { background-position: center center; }
-    25% { background-position: center top; }
-    50% { background-position: center center; }
-    75% { background-position: center bottom; }
-  }
-
-  @keyframes awardShimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-
-  @keyframes bgZoom {
-    0% { background-size: 100% 100%; }
-    50% { background-size: 110% 110%; }
-    100% { background-size: 100% 100%; }
-  }
-`}</style>
 
 export default function Awards() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -384,44 +345,43 @@ export default function Awards() {
       <div 
         id="awards-section"
         data-section
-        className={`max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-12 transition-all duration-1000 ${
+        className={`py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 relative overflow-hidden transition-all duration-1000 ${
           visibleSections['awards-section'] 
             ? 'opacity-100 translate-y-0' 
             : 'opacity-0 translate-y-8'
         }`}
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), 
-                           linear-gradient(rgba(59, 130, 246, 0.02), rgba(59, 130, 246, 0.02)), 
-                           url('${awardsBg}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          animation: visibleSections['awards-section'] ? 'bgFloat 20s ease-in-out infinite' : 'none'
-        }}
       >
-        <div className="rounded-2xl overflow-hidden bg-gradient-to-b from-white via-sky-50 to-white shadow-lg p-4 sm:p-6 lg:p-8">
-          <div className="max-w-4xl mx-auto text-center mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Our Certifications & Awards</h2>
-            <p className="text-gray-600 mt-2 text-sm sm:text-base">A curated showcase of our certifications, recognitions and achievements.</p>
+        {/* Floating background elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 bg-clip-text text-transparent mb-6">
+              Our Certifications & Awards
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mb-8 rounded-full"></div>
+            <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+              A curated showcase of our certifications, recognitions and achievements.
+            </p>
           </div>
 
           <div className="relative">
             {/* hover-to-open modal behavior; no preview panel */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-[1fr] items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[1fr] items-stretch">
               {currentAwards.map((award, index) => (
                   <div 
                     key={award.id} 
-                    className={`transform transition-all duration-500 hover:scale-105 h-full ${
+                    className={`transform transition-all duration-700 hover:scale-105 hover:-translate-y-2 h-full ${
                       visibleSections['awards-section'] 
                         ? 'opacity-100 translate-y-0' 
                         : 'opacity-0 translate-y-8'
                     }`}
                     style={{
-                      transitionDelay: visibleSections['awards-section'] ? `${index * 150}ms` : '0ms',
-                      animation: visibleSections['awards-section'] 
-                        ? `cardFloat 8s ease-in-out infinite ${index * 0.8}s, cardGlow 6s ease-in-out infinite ${index * 0.5}s` 
-                        : 'none'
+                      transitionDelay: visibleSections['awards-section'] ? `${index * 150}ms` : '0ms'
                     }}
                   >
                     <AwardCard award={award} onOpen={(a) => { setSelectedAward(a); setModalOpen(true); }} onHover={handleCardHover} />
@@ -450,25 +410,25 @@ export default function Awards() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
+        <div className="flex justify-center items-center gap-4 mt-12">
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="group flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-200 transition-all duration-200 hover:shadow-sm"
+            className="group flex items-center gap-2 px-5 py-3 bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 rounded-xl font-medium hover:bg-blue-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/80 disabled:hover:text-blue-600 transition-all duration-300 hover:shadow-lg hover:scale-105"
           >
-            <ChevronLeft size={16} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
-            <span className="font-medium">Previous</span>
+            <ChevronLeft size={18} className="transition-transform duration-200 group-hover:-translate-x-1" />
+            <span className="font-semibold">Previous</span>
           </button>
           
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={index + 1}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 ${
+                className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-110 ${
                   currentPage === index + 1
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg'
+                    : 'bg-white/80 backdrop-blur-sm border-2 border-blue-200 text-gray-700 hover:border-blue-400'
                 }`}
               >
                 {index + 1}
@@ -479,29 +439,36 @@ export default function Awards() {
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="group flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-200 transition-all duration-200 hover:shadow-sm"
+            className="group flex items-center gap-2 px-5 py-3 bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 rounded-xl font-medium hover:bg-blue-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/80 disabled:hover:text-blue-600 transition-all duration-300 hover:shadow-lg hover:scale-105"
           >
-            <span className="font-medium">Next</span>
-            <ChevronRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+            <span className="font-semibold">Next</span>
+            <ChevronRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
           </button>
         </div>
       </div>
 
       {/* Footer */}
       <footer 
-        className="bg-gray-800 text-white py-6 sm:py-8 mt-12 sm:mt-16"
-        style={{
-          backgroundImage: `linear-gradient(rgba(31, 41, 55, 0.95), rgba(31, 41, 55, 0.95)), 
-                           linear-gradient(rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.1)), 
-                           url('${footerBg}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          animation: 'bgZoom 25s ease-in-out infinite'
-        }}
+        className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white py-12 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400 text-sm sm:text-base">© 2025 POMI - Paiton Operation & Maintenance Indonesia. All rights reserved.</p>
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="mb-4">
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto mb-6 rounded-full"></div>
+            <p className="text-gray-300 text-lg font-medium">
+              © 2025 POMI - Paiton Operation & Maintenance Indonesia
+            </p>
+            <p className="text-gray-500 mt-2">All rights reserved.</p>
+          </div>
+          
+          {/* Decorative elements */}
+          <div className="flex justify-center gap-2 mt-6 opacity-50">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse delay-300"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-700"></div>
+          </div>
         </div>
       </footer>
     </>
