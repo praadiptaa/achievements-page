@@ -390,7 +390,7 @@ export default function InfoSecurity() {
                     <p className="text-sm font-semibold text-blue-700 uppercase mb-0">Compliant with ISO/IEC 27001</p>
                   </div>
 
-                  <h3 className="text-2xl font-bold mt-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">PT POMI Commitment</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold mt-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">PT POMI Commitment</h3>
                   <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-cyan-400 my-4 rounded-full" />
 
                   <p className="text-gray-700">PT POMI berkomitmen untuk menjaga keamanan, kerahasiaan, integritas, dan ketersediaan seluruh informasi serta aset teknologi informasi yang digunakan untuk mendukung kegiatan bisnis.</p>

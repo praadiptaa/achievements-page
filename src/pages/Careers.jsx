@@ -185,7 +185,7 @@ export default function Careers() {
                   <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl float-animation">
                     <Briefcase className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">How to Apply</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">How to Apply</h3>
                 </div>
                 <p className="text-gray-700 mb-6 text-lg leading-relaxed">Please submit your CV and a short cover letter to our recruitment team. Include the role title in the subject line.</p>
                 <ul className="space-y-4">

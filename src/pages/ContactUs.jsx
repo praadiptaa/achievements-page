@@ -219,7 +219,7 @@ export default function ContactUs() {
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
                   <Globe className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold shimmer-text">Our Websites</h3>
+                <h3 className="text-2xl sm:text-3xl font-bold shimmer-text">Our Websites</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {websites.map((site, index) => (

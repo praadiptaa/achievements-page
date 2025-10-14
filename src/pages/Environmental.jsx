@@ -208,7 +208,7 @@ export default function Environmental() {
                       <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow">
                         <Leaf className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Biodiversity Monitoring</h3>
+                      <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Biodiversity Monitoring</h3>
                     </div>
                     <div className="w-24 h-1 bg-gradient-to-r from-green-400 to-emerald-600 my-4 rounded-full" />
                     <p className="text-gray-700 leading-relaxed">In order to preserve the environment and support natural resource conservation efforts, PT Paiton Energy monitors biodiversity in 5 monitoring point areas in Probolinggo and Situbondo Regencies. This activity aims to identify, document and evaluate the existence of various species of flora and fauna in the areas designated by PT Paiton Energy, both protected and unprotected.</p>

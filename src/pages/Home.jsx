@@ -330,8 +330,8 @@ export default function Home({ onNavigate, onOpenPost }) {
                 ? 'opacity-100 translate-x-0' 
                 : 'opacity-0 -translate-x-8'
             }`}>
-              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                   <span className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></span>
                   Our Mission
                 </h3>
@@ -340,8 +340,8 @@ export default function Home({ onNavigate, onOpenPost }) {
                 </p>
               </div>
 
-              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                   <span className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></span>
                   Our Vision
                 </h3>
@@ -351,7 +351,7 @@ export default function Home({ onNavigate, onOpenPost }) {
               </div>
 
               {/* Quick Links */}
-              <div className="grid grid-cols-2 gap-3 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
                 <button 
                   onClick={() => onNavigate('history')}
                   className="group bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2"
@@ -365,12 +365,12 @@ export default function Home({ onNavigate, onOpenPost }) {
                 </a>
                 <button 
                   onClick={() => onNavigate('vision-mission')}
-                  className="group col-span-2 bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
+                  className="group sm:col-span-2 bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
                 >
                   <span>VISION, MISSION & POLICY</span>
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
-                <a href="#awards-certificate" onClick={() => onNavigate('awards')} className="group col-span-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2">
+                <a href="#awards-certificate" onClick={() => onNavigate('awards')} className="group sm:col-span-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2">
                   <span>AWARDS & CERTIFICATE</span>
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </a>
@@ -482,10 +482,10 @@ export default function Home({ onNavigate, onOpenPost }) {
 
                 {/* Content */}
                 <div className="p-6 relative z-20">
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors duration-300">
                     {service.title}
                   </h3>
-                  <p className="text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
+                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
                     {service.description}
                   </p>
                 </div>

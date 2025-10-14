@@ -11,7 +11,7 @@ export default function SearchResults() {
 
   return (
     <div className="max-w-5xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold mb-4">Search Results</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4">Search Results</h1>
       {q ? (
         <p className="text-lg text-gray-700">Results for <span className="font-medium">"{q}"</span> (demo)</p>
       ) : (

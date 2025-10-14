@@ -221,7 +221,7 @@ export default function Csr() {
                         <div className="p-2 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 shadow-lg">
                           <Target className="w-5 h-5 text-white" />
                         </div>
-                        <h3 className="text-2xl font-bold mt-0 mb-0 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">Overview</h3>
+                        <h3 className="text-xl sm:text-2xl font-bold mt-0 mb-0 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">Overview</h3>
                       </div>
                       
                       <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-amber-400 mb-4 rounded-full" />
