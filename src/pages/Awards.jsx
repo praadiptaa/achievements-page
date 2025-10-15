@@ -1,7 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Award, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Award, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
 import AwardCard from '../components/AwardCard';
 import Modal from '../components/Modal';
+import Footer from '../components/Footer';
+import heroPomi from '../assets/images/hero-pomi.jpg';
+import heroPomi1 from '../assets/images/hero-pomi1.jpg';
+import heroPomi2 from '../assets/images/hero-pomi2.jpg';
+import heroPomi3 from '../assets/images/hero-pomi3.jpg';
 import properUnit78 from '../assets/images/Sertifikat PROPER Unit 78 2015-2016.jpg'
 import iga2024 from '../assets/images/IGA 2024.jpg'
 import csrstar5 from '../assets/images/csr star 5.png'
@@ -25,6 +30,15 @@ export default function Awards() {
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAward, setSelectedAward] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Hero images for carousel
+  const heroImages = [
+    { url: heroPomi, title: 'Awards & Certifications', subtitle: 'PT. POMI has received numerous awards and certifications' },
+    { url: heroPomi1, title: 'Awards & Certifications', subtitle: 'PT. POMI has received numerous awards and certifications' },
+    { url: heroPomi2, title: 'Awards & Certifications', subtitle: 'PT. POMI has received numerous awards and certifications' },
+    { url: heroPomi3, title: 'Awards & Certifications', subtitle: 'PT. POMI has received numerous awards and certifications' }
+  ];
 
   function handleCardHover(a) {
     // Only open modal on hover/keyboard focus. Do not auto-close on leave.
@@ -244,36 +258,17 @@ export default function Awards() {
   const endIndex = startIndex + itemsPerPage;
   const currentAwards = awards.slice(startIndex, endIndex);
 
-  // Hero parallax / visibility state
-  const heroRef = useRef(null);
-  const [offsetY, setOffsetY] = useState(0);
-  const [isHeroVisible, setIsHeroVisible] = useState(true);
+  // Sections visibility state
   const [visibleSections, setVisibleSections] = useState({});
 
+  // Auto-slide functionality
   useEffect(() => {
-    let rafId = null;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000); // Change slide every 5 seconds
 
-    function onScroll() {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        setOffsetY(window.scrollY || window.pageYOffset);
-        if (heroRef.current) {
-          const rect = heroRef.current.getBoundingClientRect();
-          setIsHeroVisible(rect.top < window.innerHeight && rect.bottom > 0);
-        }
-      });
-    }
-
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
 
   // Intersection Observer for sections
   useEffect(() => {
@@ -300,46 +295,77 @@ export default function Awards() {
 
   return (
     <>
- {/* Hero Section */}
+ {/* Hero Section - Blog Style */}
       <div 
-        ref={heroRef}
         className="relative h-[40vh] sm:h-[50vh] lg:h-[60vh] min-h-[300px] sm:min-h-[400px] overflow-hidden"
       >
-        {/* Latar belakang dengan efek parallax */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://media.licdn.com/dms/image/v2/D5622AQFCmjOh9eeqdw/feedshare-shrink_2048_1536/B56Zh9efVVHkAo-/0/1754451803864?e=1762992000&v=beta&t=tMxudEv9vQb2GKPVoMWjRAI3DcSKaWEa3zluq9cYcDo')`,
-            transform: `translateY(${offsetY * 0.4}px)`,
-          }}
-        />
-        
-        {/* Konten dengan efek fade-in */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
-          <div className={`transition-all duration-1000 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center" style={{ transform: isHeroVisible ? 'translateY(-12px)' : 'translateY(0)' }}>{'Awards & Certifications'}</h2>
-              <p className="text-lg md:text-xl text-white max-w-3xl mx-auto text-center drop-shadow-2xl" style={{ transform: isHeroVisible ? 'translateY(-6px)' : 'translateY(0)' }}>
-                PT. POMI Paiton Operation & Maintenance Indonesia has received numerous awards and certifications in various fields, demonstrating our commitment to excellence, safety, environmental management, and corporate social responsibility.
-              </p>
+        {/* Background with overlay */}
+        <div className="absolute inset-0">
+          {heroImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center transform scale-105"
+                style={{ 
+                  backgroundImage: `url('${image.url}')`,
+                  animation: index === currentSlide ? 'slow-zoom 20s ease-in-out infinite' : 'none'
+                }}
+              />
             </div>
+          ))}
+        </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/80 via-amber-800/70 to-yellow-900/80" />
+        
+        {/* Animated overlay patterns */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400 rounded-full filter blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-400 rounded-full filter blur-3xl animate-pulse delay-1000" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div className="text-white max-w-3xl">
+            <div className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <Trophy size={16} className="text-yellow-300" />
+              <span className="text-sm font-medium">Excellence & Recognition</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in-up">
+              Awards & Certifications
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-yellow-100 animate-fade-in-up animation-delay-200">
+              PT. POMI has received numerous awards and certifications
+            </p>
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
-          <Award size={24} className="text-white rotate-90" />
+        {/* Slide indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {heroImages.map((_, index) => (
+            <button 
+              key={index} 
+              onClick={() => setCurrentSlide(index)} 
+              className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75 w-1.5'}`} 
+              aria-label={`Go to slide ${index + 1}`} 
+            />
+          ))}
         </div>
 
-        {/* Animated overlay particles */}
-        <div className="absolute inset-0 pointer-events-none z-10">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-300/30 rounded-full animate-ping"></div>
-          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-300/40 rounded-full animate-pulse delay-1000"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-white/20 rounded-full animate-bounce delay-500"></div>
-          <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-yellow-200/35 rounded-full animate-pulse delay-2000"></div>
-          <div className="absolute top-1/2 left-1/2 w-0.5 h-0.5 bg-white/50 rounded-full animate-ping delay-3000"></div>
-        </div>
+        {/* Bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent" />
       </div>
+
+      <style jsx>{`
+        @keyframes slow-zoom {
+          0%, 100% { transform: scale(1.05); }
+          50% { transform: scale(1.1); }
+        }
+        .delay-1000 {
+          animation-delay: 1s;
+        }
+      `}</style>
 
       {/* Awards Grid */}
       <div 
@@ -447,30 +473,7 @@ export default function Awards() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer 
-        className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white py-12 relative overflow-hidden"
-      >
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="mb-4">
-            <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto mb-6 rounded-full"></div>
-            <p className="text-gray-300 text-lg font-medium">
-              © 2025 POMI - Paiton Operation & Maintenance Indonesia
-            </p>
-            <p className="text-gray-500 mt-2">All rights reserved.</p>
-          </div>
-          
-          {/* Decorative elements */}
-          <div className="flex justify-center gap-2 mt-6 opacity-50">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse delay-300"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-700"></div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

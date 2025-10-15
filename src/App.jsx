@@ -12,6 +12,8 @@ import ContactUs from './pages/ContactUs'
 import SearchResults from './pages/SearchResults'
 import WpPostDetail from './components/WpPostDetail'
 import Environmental from './pages/Environmental'
+import Ethics from './pages/Ethics'
+import Blog from './pages/Blog'
 import './App.css'
 import { WP_API } from './constants/wp'
 
@@ -31,6 +33,8 @@ function App() {
   else if (pathname.startsWith('/environmental')) currentPage = 'environmental';
   else if (pathname.startsWith('/careers')) currentPage = 'careers';
   else if (pathname.startsWith('/contact')) currentPage = 'contact';
+  else if (pathname.startsWith('/ethics')) currentPage = 'ethics';
+  else if (pathname.startsWith('/blog')) currentPage = 'blog';
 
   const navigateTo = (page, params = null) => {
     // preserve previous behavior for components using onNavigate
@@ -62,6 +66,12 @@ function App() {
       case 'contact':
         navigate('/contact');
         break;
+      case 'ethics':
+        navigate('/ethics');
+        break;
+      case 'blog':
+        navigate('/blog');
+        break;
       case 'search':
         if (params && params.query) navigate(`/search?q=${encodeURIComponent(params.query)}`);
         else navigate('/search');
@@ -89,6 +99,8 @@ function App() {
     <Route path="/environmental" element={<Environmental onNavigate={navigateTo} />} />
     <Route path="/careers" element={<Careers onNavigate={navigateTo} />} />
     <Route path="/contact" element={<ContactUs onNavigate={navigateTo} />} />
+    <Route path="/ethics" element={<Ethics onNavigate={navigateTo} />} />
+  <Route path="/blog" element={<Blog />} />
   <Route path="/posts/:id" element={<WpPostDetail baseUrl={WP_API} onBack={() => navigateTo('home')} />} />
   <Route path="/search" element={<SearchResults />} />
   <Route path="/info-security" element={<InfoSecurity onNavigate={navigateTo} />} />

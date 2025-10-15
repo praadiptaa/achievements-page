@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Award, ChevronRight, Calendar, Users, TrendingUp, Building, Edit, Shuffle, Zap, CheckCircle } from 'lucide-react';
 import heroPomi from '../assets/images/hero-pomi.jpg';
 import heroPomi1 from '../assets/images/hero-pomi1.jpg';
 import heroPomi2 from '../assets/images/hero-pomi2.jpg';
 import heroPomi3 from '../assets/images/hero-pomi3.jpg';
+import Footer from '../components/Footer';
 // images intentionally omitted in this page; imports removed to avoid unused variable lint errors
 
 <style jsx>{`
@@ -167,10 +168,8 @@ import heroPomi3 from '../assets/images/hero-pomi3.jpg';
 `}</style>
 
 export default function History() {
-  const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [visibleSections, setVisibleSections] = useState({});
-  const heroRef = useRef(null);
 
   // Hero images for carousel
   const heroImages = [
@@ -195,23 +194,6 @@ export default function History() {
       subtitle: 'A world class power generation O&M Company'
     }
   ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsHeroVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (heroRef.current) {
-      observer.observe(heroRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   // Intersection Observer for sections
   useEffect(() => {
@@ -243,15 +225,6 @@ export default function History() {
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
-
-  // Manual navigation functions
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
-  };
 
   const timelineEvents = [
     {
@@ -294,126 +267,77 @@ export default function History() {
 
   return (
     <>
-      {/* Hero Section with Image Carousel */}
+      {/* Hero Section - Blog Style */}
       <div
-        ref={heroRef}
         className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] overflow-hidden"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%)'
-        }}
       >
-        {/* Image Carousel */}
+        {/* Background with overlay */}
         <div className="absolute inset-0">
           {heroImages.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-                index === currentSlide
-                  ? 'opacity-100'
-                  : 'opacity-0'
-              }`}
-              style={{
-                animation: index === currentSlide
-                  ? 'parallaxMove 8s ease-in-out infinite, zoomPulse 4s ease-in-out infinite'
-                  : index === ((currentSlide - 1 + heroImages.length) % heroImages.length)
-                    ? 'slideOutLeft 1s ease-in-out forwards'
-                    : 'none',
-                transformStyle: 'preserve-3d'
-              }}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
             >
-              <div
-                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
-                  index === currentSlide ? 'scale-100' : 'scale-110'
-                }`}
-                style={{
-                  backgroundImage: `linear-gradient(${
-                    index === currentSlide
-                      ? 'rgba(0,0,0,0.4), rgba(0,0,0,0.4)'
-                      : 'rgba(0,0,0,0.6), rgba(0,0,0,0.6)'
-                  }), url('${image.url}')`,
-                  animation: index === currentSlide ? 'none' : 'slideInRight 1s ease-out forwards',
-                  transformOrigin: 'center center'
+              <div 
+                className="absolute inset-0 bg-cover bg-center transform scale-105"
+                style={{ 
+                  backgroundImage: `url('${image.url}')`,
+                  animation: index === currentSlide ? 'slow-zoom 20s ease-in-out infinite' : 'none'
                 }}
               />
             </div>
           ))}
         </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-gray-800/70 to-slate-900/80" />
+        
+        {/* Animated overlay patterns */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-slate-400 rounded-full filter blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-400 rounded-full filter blur-3xl animate-pulse delay-1000" />
+        </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
-          <div
-            className={`transition-all duration-1000 ease-out ${
-              isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center"
-                  style={{
-                    animation: isHeroVisible ? 'slideInRight 0.8s ease-out forwards' : 'none',
-                    transform: isHeroVisible ? 'translateX(0) translateY(-12px)' : 'translateX(50px) translateY(0)',
-                    opacity: isHeroVisible ? 1 : 0
-                  }}>
-                {heroImages[currentSlide].title}
-              </h2>
-              <p className="text-lg md:text-xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300 mx-auto text-center"
-                 style={{
-                   animation: isHeroVisible ? 'slideInRight 0.8s ease-out 0.3s forwards' : 'none',
-                   transform: isHeroVisible ? 'translateX(0) translateY(-6px)' : 'translateX(50px) translateY(0)',
-                   opacity: isHeroVisible ? 1 : 0
-                 }}>
-                {heroImages[currentSlide].subtitle}
-              </p>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div className="text-white max-w-3xl">
+            <div className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <Calendar size={16} className="text-slate-300" />
+              <span className="text-sm font-medium">Our Journey</span>
             </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in-up">
+              History
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-slate-100 animate-fade-in-up animation-delay-200">
+              PT. Paiton Operation & Maintenance Indonesia
+            </p>
           </div>
         </div>
 
-        {/* Carousel Navigation Dots */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+        {/* Slide indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? 'bg-white scale-125'
-                  : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
+            <button 
+              key={index} 
+              onClick={() => setCurrentSlide(index)} 
+              className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75 w-1.5'}`} 
+              aria-label={`Go to slide ${index + 1}`} 
             />
           ))}
         </div>
 
-        {/* Left Navigation Button */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white p-5 rounded-full transition-all duration-300 hover:scale-110 group"
-          aria-label="Previous slide"
-        >
-          <ChevronRight size={20} className="rotate-180 group-hover:-translate-x-1 transition-transform duration-200" />
-        </button>
-
-        {/* Right Navigation Button */}
-        <button
-          onClick={nextSlide}
-          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white p-5 rounded-full transition-all duration-300 hover:scale-110 group"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
-        </button>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-20">
-          <ChevronRight size={24} className="text-white rotate-90" />
-        </div>
-
-        {/* Animated overlay particles */}
-        <div className="absolute inset-0 pointer-events-none z-10">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-ping"></div>
-          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-300/30 rounded-full animate-pulse delay-1000"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-white/15 rounded-full animate-bounce delay-500"></div>
-          <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-blue-200/25 rounded-full animate-pulse delay-2000"></div>
-        </div>
+        {/* Bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent" />
       </div>
+
+      <style jsx>{`
+        @keyframes slow-zoom {
+          0%, 100% { transform: scale(1.05); }
+          50% { transform: scale(1.1); }
+        }
+        .delay-1000 {
+          animation-delay: 1s;
+        }
+      `}</style>
 
       {/* Timeline Section */}
       <div
@@ -526,28 +450,7 @@ export default function History() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white py-12 relative overflow-hidden">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="mb-4">
-            <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto mb-6 rounded-full"></div>
-            <p className="text-gray-300 text-lg font-medium">
-              © 2025 POMI - Paiton Operation & Maintenance Indonesia
-            </p>
-            <p className="text-gray-500 mt-2">All rights reserved.</p>
-          </div>
-          
-          {/* Decorative elements */}
-          <div className="flex justify-center gap-2 mt-6 opacity-50">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse delay-300"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-700"></div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

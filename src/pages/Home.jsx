@@ -5,8 +5,6 @@ import heroPomi from '../assets/images/hero-pomi.jpg';
 import csr from '../assets/images/csr.jpg';
 import envi from '../assets/images/enviroment.jpg';
 import safety from '../assets/images/safety.jpg';
-import WpPostsDemo from '../components/WpPostsDemo';
-import { WP_API } from '../constants/wp';
 // NOTE: add your hero video files at these paths or update the imports to point to your files
 import heroVideoMp4 from '../assets/videos/hero.mp4';
 
@@ -97,7 +95,7 @@ import heroVideoMp4 from '../assets/videos/hero.mp4';
   }
 `}</style>
 
-export default function Home({ onNavigate, onOpenPost }) {
+export default function Home({ onNavigate }) {
   const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [visibleSections, setVisibleSections] = useState({});
   const heroRef = useRef(null);
@@ -359,10 +357,13 @@ export default function Home({ onNavigate, onOpenPost }) {
                   <span>HISTORY</span>
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
-                <a href="#ethics" className="group bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2">
+                <button 
+                  onClick={() => onNavigate('ethics')}
+                  className="group bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
+                >
                   <span>ETHICS</span>
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
-                </a>
+                </button>
                 <button 
                   onClick={() => onNavigate('vision-mission')}
                   className="group sm:col-span-2 bg-white/80 backdrop-blur-sm border-2 border-blue-600 text-blue-600 py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
@@ -370,10 +371,13 @@ export default function Home({ onNavigate, onOpenPost }) {
                   <span>VISION, MISSION & POLICY</span>
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
-                <a href="#awards-certificate" onClick={() => onNavigate('awards')} className="group sm:col-span-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => onNavigate('awards')}
+                  className="group sm:col-span-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-5 rounded-xl font-medium cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-blue-700 hover:to-blue-600 flex items-center justify-center gap-2"
+                >
                   <span>AWARDS & CERTIFICATE</span>
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
-                </a>
+                </button>
               </div>
             </div>
 
@@ -497,29 +501,7 @@ export default function Home({ onNavigate, onOpenPost }) {
           </div>
         </div>
       </div>
-  {/* WordPress posts demo (headless) */}
-  <section id="wp-posts" data-section className={`py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden transition-all duration-700 ${visibleSections['wp-posts'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-    {/* Subtle background decoration */}
-    <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute top-10 right-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 left-10 w-72 h-72 bg-indigo-200/20 rounded-full blur-3xl"></div>
-    </div>
-
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div className="mb-12 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 bg-clip-text text-transparent mb-4">
-          Latest from POMI
-        </h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mb-6 rounded-full"></div>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          News, announcements, and updates from POMI.
-        </p>
-      </div>
-
-      {/* Use WordPress.com Public API endpoint (returns 200) to avoid CORS/login redirects */}
-      <WpPostsDemo baseUrl={WP_API} onOpenPost={onOpenPost} />
-    </div>
-  </section>
+  {/* Posts moved to /blog page - removed from home to centralize blog content */}
       <footer className="bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white py-12 relative overflow-hidden">
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30"></div>

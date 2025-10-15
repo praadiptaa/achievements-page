@@ -35,11 +35,9 @@ const HeroStyles = () => (
 );
 
 export default function Careers() {
-  const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const heroRef = useRef(null);
   const contentRef = useRef(null);
-  const [contentVisible, setContentVisible] = useState(false);
 
   const heroImages = [
     { url: heroPomi, title: 'Careers at PT POMI', subtitle: 'Grow with us — build a meaningful career' },
@@ -47,20 +45,6 @@ export default function Careers() {
     { url: heroPomi2, title: 'Careers at PT POMI', subtitle: 'Safe operations, continuous learning' },
     { url: heroPomi3, title: 'Careers at PT POMI', subtitle: 'Make an impact in the community' }
   ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) setIsHeroVisible(true); });
-    }, { threshold: 0.1 });
-    if (heroRef.current) observer.observe(heroRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setContentVisible(true); }, { threshold: 0.12 });
-    if (contentRef.current) obs.observe(contentRef.current);
-    return () => obs.disconnect();
-  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => { setCurrentSlide((prev) => (prev + 1) % heroImages.length); }, 5000);
@@ -91,45 +75,78 @@ export default function Careers() {
     <>
       <HeroStyles />
 
-      <div ref={heroRef} className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%)' }}>
+      {/* Hero Section - Blog Style */}
+      <div 
+        ref={heroRef} 
+        className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] overflow-hidden"
+      >
+        {/* Background with overlay */}
         <div className="absolute inset-0">
           {heroImages.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
-              style={{
-                animation: index === currentSlide
-                  ? 'parallaxMove 8s ease-in-out infinite'
-                  : 'none',
-                transformStyle: 'preserve-3d'
-              }}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
             >
-              <div
-                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${index === currentSlide ? 'scale-100' : 'scale-110'}`}
-                style={{
-                  backgroundImage: `linear-gradient(${index === currentSlide ? 'rgba(0,0,0,0.4), rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.6), rgba(0,0,0,0.6)'}), url('${image.url}')`,
-                  transformOrigin: 'center center'
+              <div 
+                className="absolute inset-0 bg-cover bg-center transform scale-105"
+                style={{ 
+                  backgroundImage: `url('${image.url}')`,
+                  animation: index === currentSlide ? 'slow-zoom 20s ease-in-out infinite' : 'none'
                 }}
               />
             </div>
           ))}
         </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-purple-800/70 to-violet-900/80" />
+        
+        {/* Animated overlay patterns */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-violet-400 rounded-full filter blur-3xl animate-pulse delay-1000" />
+        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
-          <div className={`transition-all duration-1000 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center" style={{ animation: isHeroVisible ? 'slideInRight 0.8s ease-out forwards' : 'none', transform: isHeroVisible ? 'translateX(0) translateY(-12px)' : 'translateX(50px) translateY(0)', opacity: isHeroVisible ? 1 : 0 }}>{heroImages[currentSlide].title}</h2>
-              <p className="text-lg md:text-xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300 mx-auto text-center" style={{ animation: isHeroVisible ? 'slideInRight 0.8s ease-out 0.3s forwards' : 'none', transform: isHeroVisible ? 'translateX(0) translateY(-6px)' : 'translateX(50px) translateY(0)', opacity: isHeroVisible ? 1 : 0 }}>{heroImages[currentSlide].subtitle}</p>
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div className="text-white max-w-3xl">
+            <div className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <Briefcase size={16} className="text-indigo-300" />
+              <span className="text-sm font-medium">Join Our Team</span>
             </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in-up">
+              Careers at PT POMI
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-indigo-100 animate-fade-in-up animation-delay-200">
+              Grow with us — build a meaningful career
+            </p>
           </div>
         </div>
 
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+        {/* Slide indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {heroImages.map((_, index) => (
-            <button key={index} onClick={() => setCurrentSlide(index)} className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white scale-125 shadow-lg' : 'bg-white/40 hover:bg-white/70'}`} aria-label={`Go to slide ${index + 1}`} />
+            <button 
+              key={index} 
+              onClick={() => setCurrentSlide(index)} 
+              className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75 w-1.5'}`} 
+              aria-label={`Go to slide ${index + 1}`} 
+            />
           ))}
         </div>
+
+        {/* Bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent" />
       </div>
+
+      <style jsx>{`
+        @keyframes slow-zoom {
+          0%, 100% { transform: scale(1.05); }
+          50% { transform: scale(1.1); }
+        }
+        .delay-1000 {
+          animation-delay: 1s;
+        }
+      `}</style>
 
       <section id="careers-content" className="py-20 bg-gradient-to-br from-indigo-50 via-violet-50 to-purple-50 relative overflow-hidden">
         {/* Floating decorative elements */}
@@ -138,7 +155,7 @@ export default function Careers() {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Intro Section with Glass Card */}
-          <div ref={contentRef} className={`glass-card gradient-border rounded-3xl shadow-2xl p-8 sm:p-12 mb-12 transform transition-all duration-700 ${contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <div ref={contentRef} className="glass-card gradient-border rounded-3xl shadow-2xl p-8 sm:p-12 mb-12">
             <div className="mx-auto max-w-4xl">
               <div className="text-center mb-10">
                 <h2 className="text-4xl md:text-5xl font-extrabold shimmer-text mb-4">Build Your Career With Us</h2>

@@ -31,7 +31,6 @@ const HeroStyles = () => (
 );
 
 export default function ContactUs() {
-  const [isHeroVisible, setIsHeroVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const heroRef = useRef(null);
 
@@ -41,14 +40,6 @@ export default function ContactUs() {
     { url: heroPomi2, title: 'Visit Our Office', subtitle: 'Located in Paiton, Probolinggo, East Java' },
     { url: heroPomi3, title: 'Let\'s Connect', subtitle: 'Building partnerships for a sustainable future' }
   ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) setIsHeroVisible(true); });
-    }, { threshold: 0.1 });
-    if (heroRef.current) observer.observe(heroRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => { setCurrentSlide((prev) => (prev + 1) % heroImages.length); }, 5000);
@@ -104,48 +95,81 @@ export default function ContactUs() {
     <>
       <HeroStyles />
 
-      <div ref={heroRef} className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] overflow-hidden" style={{ background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%)' }}>
+      {/* Hero Section - Blog Style */}
+      <div 
+        ref={heroRef} 
+        className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] min-h-[400px] overflow-hidden"
+      >
+        {/* Background with overlay */}
         <div className="absolute inset-0">
           {heroImages.map((image, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
-              style={{
-                animation: index === currentSlide
-                  ? 'parallaxMove 8s ease-in-out infinite'
-                  : 'none',
-                transformStyle: 'preserve-3d'
-              }}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
             >
-              <div
-                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${index === currentSlide ? 'scale-100' : 'scale-110'}`}
-                style={{
-                  backgroundImage: `linear-gradient(${index === currentSlide ? 'rgba(0,0,0,0.4), rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.6), rgba(0,0,0,0.6)'}), url('${image.url}')`,
-                  transformOrigin: 'center center'
+              <div 
+                className="absolute inset-0 bg-cover bg-center transform scale-105"
+                style={{ 
+                  backgroundImage: `url('${image.url}')`,
+                  animation: index === currentSlide ? 'slow-zoom 20s ease-in-out infinite' : 'none'
                 }}
               />
             </div>
           ))}
         </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-cyan-800/70 to-blue-900/80" />
+        
+        {/* Animated overlay patterns */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full filter blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-400 rounded-full filter blur-3xl animate-pulse delay-1000" />
+        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
-          <div className={`transition-all duration-1000 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white drop-shadow-2xl mb-2 transform transition-all duration-700 ease-out text-center" style={{ animation: isHeroVisible ? 'slideInRight 0.8s ease-out forwards' : 'none', transform: isHeroVisible ? 'translateX(0) translateY(-12px)' : 'translateX(50px) translateY(0)', opacity: isHeroVisible ? 1 : 0 }}>{heroImages[currentSlide].title}</h2>
-              <p className="text-lg md:text-xl text-white max-w-3xl drop-shadow-2xl transform transition-all duration-700 ease-out delay-300 mx-auto text-center" style={{ animation: isHeroVisible ? 'slideInRight 0.8s ease-out 0.3s forwards' : 'none', transform: isHeroVisible ? 'translateX(0) translateY(-6px)' : 'translateX(50px) translateY(0)', opacity: isHeroVisible ? 1 : 0 }}>{heroImages[currentSlide].subtitle}</p>
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div className="text-white max-w-3xl">
+            <div className="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <Mail size={16} className="text-blue-300" />
+              <span className="text-sm font-medium">Let's Connect</span>
             </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 animate-fade-in-up">
+              Contact Us
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-blue-100 animate-fade-in-up animation-delay-200">
+              We're here to help and answer any question you might have
+            </p>
           </div>
         </div>
 
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+        {/* Slide indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {heroImages.map((_, index) => (
-            <button key={index} onClick={() => setCurrentSlide(index)} className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white scale-125 shadow-lg' : 'bg-white/40 hover:bg-white/70'}`} aria-label={`Go to slide ${index + 1}`} />
+            <button 
+              key={index} 
+              onClick={() => setCurrentSlide(index)} 
+              className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75 w-1.5'}`} 
+              aria-label={`Go to slide ${index + 1}`} 
+            />
           ))}
         </div>
+
+        {/* Bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent" />
       </div>
 
+      <style jsx>{`
+        @keyframes slow-zoom {
+          0%, 100% { transform: scale(1.05); }
+          50% { transform: scale(1.1); }
+        }
+        .delay-1000 {
+          animation-delay: 1s;
+        }
+      `}</style>
+
       <div className="relative -mt-20 mb-12 z-30">
-        <div className="mx-auto max-w-4xl p-6 sm:p-8" style={{ animation: isHeroVisible ? 'slideInLeft 0.8s ease-out forwards' : 'none' }}>
+        <div className="mx-auto max-w-4xl p-6 sm:p-8">
           <div className="glass-card rounded-2xl p-8 sm:p-10 shadow-2xl border-2 border-white/50 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-cyan-400/10 to-blue-400/10 opacity-50"></div>
             <div className="relative z-10">

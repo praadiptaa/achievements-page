@@ -89,6 +89,16 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
                     Information Security Policy Statement
                   </button>
                   <button 
+                    onClick={() => { onNavigate('ethics'); onClose(); }}
+                    className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
+                      currentPage === 'ethics'
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+                  >
+                    Code of Business Conduct
+                  </button>
+                  <button 
                     onClick={() => { onNavigate('awards'); onClose(); }}
                     className={`block w-full text-left px-6 py-2.5 pl-10 text-sm transition-colors ${
                       currentPage === 'awards'
@@ -128,6 +138,12 @@ export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
               className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
             >
               CONTACT US
+            </button>
+            <button
+              onClick={() => { onNavigate('blog'); onClose(); }}
+              className="block w-full text-left px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium border-t border-gray-100"
+            >
+              BLOG
             </button>
           </div>
         </div>
