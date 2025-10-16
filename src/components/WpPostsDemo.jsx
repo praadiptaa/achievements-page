@@ -171,7 +171,7 @@ export default function WpPostsDemo({ baseUrl = 'https://cms.example.com', onOpe
           const embeddedTerms = (post._embedded && (post._embedded['wp:term'] || post._embedded['term'])) ? (post._embedded['wp:term'] || post._embedded['term']) : null;
           // embeddedTerms is an array of arrays (each taxonomy), flatten and pick
           const flatTerms = embeddedTerms ? embeddedTerms.flat().filter(Boolean) : [];
-          const categoryTerms = flatTerms.filter(t => t.taxonomy === 'category' && t.name !== 'Uncategorized' && t.name !== 'uncategorized');
+          const categoryTerms = flatTerms.filter(t => t.taxonomy === 'category' && t.name !== 'Uncategorized' && t.name !== 'uncategorized' && t.name !== 'Tak Berkategori' && t.name !== 'tak berkategori');
           const tagTerms = flatTerms.filter(t => t.taxonomy === 'post_tag' || t.taxonomy === 'tag');
 
           const handleClick = () => {

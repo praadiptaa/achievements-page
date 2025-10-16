@@ -10,6 +10,7 @@ export default function WpPostDetail({ postId: propPostId, onBack, baseUrl = 'ht
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [toast, setToast] = useState(null);
+  const [relativeTime, setRelativeTime] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -117,6 +118,20 @@ export default function WpPostDetail({ postId: propPostId, onBack, baseUrl = 'ht
     };
   }, [post]);
 
+  // Update relative time every minute
+  useEffect(() => {
+    if (!post?.date) return;
+
+    const updateRelativeTime = () => {
+      setRelativeTime(getRelativeTime(post.date));
+    };
+
+    updateRelativeTime(); // initial
+    const interval = setInterval(updateRelativeTime, 60000); // every 1 minute
+
+    return () => clearInterval(interval);
+  }, [post?.date]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center">
@@ -164,23 +179,12 @@ export default function WpPostDetail({ postId: propPostId, onBack, baseUrl = 'ht
   // Extract categories and tags
   const embeddedTerms = (post._embedded && (post._embedded['wp:term'] || post._embedded['term'])) ? (post._embedded['wp:term'] || post._embedded['term']) : null;
   const flatTerms = embeddedTerms ? embeddedTerms.flat().filter(Boolean) : [];
-  const categoryTerms = flatTerms.filter(t => t.taxonomy === 'category' && t.name !== 'Uncategorized' && t.name !== 'uncategorized');
+  const categoryTerms = flatTerms.filter(t => t.taxonomy === 'category' && t.name !== 'Uncategorized' && t.name !== 'uncategorized' && t.name !== 'Tak Berkategori' && t.name !== 'tak berkategori');
   const tagTerms = flatTerms.filter(t => t.taxonomy === 'post_tag' || t.taxonomy === 'tag');
 
   // Extract author
   const author = post._embedded && post._embedded.author && post._embedded.author[0];
   const authorName = author ? (author.name || 'Unknown Author') : 'POMI';
-
-  // Format date
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('id-ID', { 
-      weekday: 'long',
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
 
   // Calculate relative time (posted X ago)
   const getRelativeTime = (dateString) => {
@@ -206,6 +210,17 @@ export default function WpPostDetail({ postId: propPostId, onBack, baseUrl = 'ht
     }
     
     return 'Baru saja diposting';
+  };
+
+  // Format date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', { 
+      weekday: 'long',
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
   };
 
   return (
@@ -306,7 +321,7 @@ export default function WpPostDetail({ postId: propPostId, onBack, baseUrl = 'ht
             </div>
             <div className="flex items-center gap-2 text-gray-600">
               <Clock size={18} className="text-blue-600" />
-              <span className="text-sm font-medium">{getRelativeTime(post.date)}</span>
+              <span className="text-sm font-medium">{relativeTime}</span>
             </div>
           </div>
 
